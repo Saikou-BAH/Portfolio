@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction de la Survie à 1 an - SLA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #F4F2FF;
+            color: #333;
+        }
+        .header {
+            background-color: #0F056B;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+        .btn-custom {
+            background-color: #0F056B;
+            border-color: #0F056B;
+            font-size: 18px;
+            border-radius: 8px;
+        }
+        .btn-custom:hover {
+            background-color: #0F056B;
+        }
+        .card {
+            border: none;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .highlight {
+            color: #0F056B;
+        }
+        .portfolio-media {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 40.66%;
+            height: 0;
+            overflow: hidden;
+            max-width: 70%;
+            margin : auto;
+            background: #000;
+            border-radius: 8px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    
+<header class="header">
+    <h1><strong>Prédiction de la Survie à 1 an chez les Patients Atteints de SLA</strong></h1>
+    <ul>
+        <li>Anticiper la survie des patients SLA pour une meilleure prise en charge.</li>
+        <li>Identifier les patients à haut risque grâce à l'intelligence artificielle.</li>
+        <li>Modèle précis pour une intervention médicale rapide et efficace.</li>
+    </ul>
+</header>
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Objectifs du projet -->
+        <div class="col-md-4">
+            <h2>Objectifs du projet</h2>
+            <ul>
+                <li>Identifier rapidement les patients à haut risque de décès précoce.</li>
+                <li>Optimiser la prise en charge clinique par une anticipation efficace.</li>
+                <li>Proposer un modèle fiable avec un fort pouvoir prédictif.</li>
+            </ul>
+        </div>
+        <!-- Graphiques -->
+        <div class="col-md-4">
+            <h2>Graphiques</h2>
+            <img src="assets/images/portfolio/sla_image.png" class="img-fluid rounded shadow" alt="Graphiques SLA">
+        </div>
+        <!-- Compétences clés -->
+        <div class="col-md-4">
+            <h2>Compétences clés</h2>
+            <ul>
+                <li>Analyse exploratoire poussée avec visualisations pertinentes.</li>
+                <li>Gestion avancée du déséquilibre de données avec SMOTE.</li>
+                <li>Modélisation prédictive avec XGBoost, Naïve Bayes et régression logistique.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center">Les Atouts du Projet</h2>
+    <div class="row text-center mt-4">
+        <div class="col-md-4">
+            <h4>🔹 Nettoyage & Préparation Rigoureux</h4>
+            <p>🔍 Gestion minutieuse des données manquantes et aberrantes, sélection précise des variables.</p>
+        </div>
+        <div class="col-md-4">
+            <h4>📊 Analyse Exploratoire Approfondie</h4>
+            <p>📈 Identification des facteurs clés de survie à travers analyses statistiques et visuelles approfondies.</p>
+        </div>
+        <div class="col-md-4">
+            <h4>📈 Modélisation Avancée & Validation</h4>
+            <p>🕰️ Utilisation de techniques avancées comme XGBoost et SMOTE, validation robuste sur jeu de test indépendant.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center">Résultats et Évaluation du Modèle</h2>
+    <div class="row text-center mt-4">
+        <div class="col-md-3">
+            <h3 class="text-primary">Meilleur Modèle</h3>
+            <p>XGBoost avec SMOTE (sans sélection de variables) identifié comme optimal.</p>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-primary">Performance Élevée</h3>
+            <p>AUC de 0.9469 en entraînement, démontrant une excellente capacité discriminante.</p>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-primary">Validation Robuste</h3>
+            <p>Confirmation des résultats avec une AUC de 0.8046 sur les données inédites du jeu de test.</p>
+        </div>
+        <div class="col-md-3">
+            <h3 class="text-primary">Impact Clinique</h3>
+            <p>Identification fiable de 83 % des patients décédés dans les 12 mois.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center">🎥 Vidéo de Démonstration</h2>
+    <!-- Intégration YouTube -->
+    <div class="video-container">
+        <iframe 
+          src="https://www.youtube-nocookie.com/embed/o62E-UR1EjQ?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+    </div>
+
+    <p class="text-center mt-3">
+        Découvrez le projet complet sur 
+        <a href="https://github.com/Saikou-BAH/SLA_ANALYSIS" target="_blank">
+            GitHub
+        </a> et explorez en détail la méthodologie et les résultats obtenus.
+    </p>
+    <p class="text-center mt-2">
+        Problème de lecture ?
+        <a href="https://youtu.be/o62E-UR1EjQ" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
+    </p>
+</div>
+
+<div class="text-center my-5">
+    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
