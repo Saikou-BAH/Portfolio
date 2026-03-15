@@ -3,142 +3,624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carte Météo Temps Réel</title>
+    <title>Carte Météo Temps Réel - Leaflet.js</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #F4F2FF;
             color: #333;
+            font-family: 'Poppins', sans-serif;
         }
+
+        /* ── HEADER ── */
         .header {
-            background-color: #0F056B;
+            background: linear-gradient(135deg, #0F056B 0%, #1a3a8e 60%, #1e6eb0 100%);
             color: white;
-            padding: 40px 0;
+            padding: 60px 20px 50px;
             text-align: center;
         }
-        .btn-custom {
-            background-color: #0F056B;
-            border-color: #0F056B;
-            font-size: 18px;
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .header p.subtitle {
+            font-size: 1.05rem;
+            opacity: 0.88;
+            max-width: 750px;
+            margin: 0 auto 25px;
+            line-height: 1.7;
+        }
+        .tech-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin: 4px;
+        }
+
+        /* ── STATS BANNER ── */
+        .stats-banner {
+            background: #0F056B;
+            color: white;
+            padding: 28px 0;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px 20px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #60a5fa;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            opacity: 0.82;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        /* ── SECTIONS ── */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0F056B;
+            margin-bottom: 8px;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #0F056B, #1e6eb0);
+            margin-top: 8px;
+            border-radius: 2px;
+        }
+        .section-title.text-center::after {
+            margin: 8px auto 0;
+        }
+
+        /* ── PIPELINE STEPS ── */
+        .pipeline-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px 20px;
+            width: 175px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-top: 4px solid #0F056B;
+            transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-4px); }
+        .step-number {
+            width: 36px; height: 36px;
+            background: #0F056B;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .step-card h6 {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #0F056B;
+            margin-bottom: 6px;
+        }
+        .step-card p {
+            font-size: 0.75rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* ── FEATURE CARDS ── */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px 24px;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.08);
+            height: 100%;
+            border-left: 4px solid #0F056B;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(15,5,107,0.15);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .feature-card h5 {
+            font-weight: 600;
+            color: #0F056B;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .feature-card p, .feature-card ul {
+            font-size: 0.88rem;
+            color: #555;
+            margin: 0;
+        }
+        .feature-card ul { padding-left: 18px; }
+        .feature-card li { margin-bottom: 4px; }
+
+        /* ── API CARDS ── */
+        .api-card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            height: 100%;
+            transition: transform 0.2s;
+        }
+        .api-card:hover { transform: translateY(-4px); }
+        .api-icon {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem;
+            margin: 0 auto 14px;
+        }
+        .api-card h5 {
+            font-weight: 600;
+            color: #0F056B;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+        .api-card p {
+            font-size: 0.82rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* ── FINDING BOXES ── */
+        .finding-box {
+            background: white;
+            border-left: 5px solid #0F056B;
             border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(15,5,107,0.07);
         }
-        .btn-custom:hover {
-            background-color: #0F056B;
+        .finding-box .finding-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #0F056B;
+            margin-bottom: 6px;
         }
-        .card {
+        .finding-box p { margin: 0; font-size: 0.92rem; color: #444; }
+
+        /* ── POPUP DEMO ── */
+        .popup-demo {
+            background: #1e2a3a;
+            border-radius: 14px;
+            padding: 24px;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .popup-demo .popup-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .popup-demo .flag-placeholder {
+            font-size: 2rem;
+        }
+        .popup-demo .country-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+        .popup-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .popup-line .key { color: #94a3b8; }
+        .popup-line .val { color: #e2e8f0; font-weight: 500; }
+
+        /* ── SCREENSHOT ── */
+        .screenshot-card {
+            background: white;
+            border-radius: 14px;
+            padding: 12px;
+            box-shadow: 0 6px 24px rgba(15,5,107,0.12);
+        }
+        .screenshot-card img {
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        /* ── VIDEO ── */
+        .video-container {
+            position: relative;
+            padding-bottom: 40.66%;
+            height: 0;
+            overflow: hidden;
+            max-width: 75%;
+            margin: auto;
+            background: #000;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* ── BUTTONS ── */
+        .btn-primary-custom {
+            background: #0F056B;
+            color: white;
             border: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .portfolio-media {
-            max-width: 100%;
-            height: auto;
             border-radius: 8px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary-custom:hover {
+            background: #1a3a8e;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-outline-custom {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .btn-outline-custom:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .section-bg {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(15,5,107,0.07);
         }
     </style>
 </head>
 <body>
-    
+
+<!-- ── HEADER ── -->
 <header class="header">
-    <h1><strong>🌍 Carte Météo Temps Réel par Pays</strong></h1>
-    <ul>
-        <li>Visualisation interactive de la météo en temps réel pour chaque pays.</li>
-        <li>Au survol/clic : <strong>drapeau</strong>, <strong>nom</strong>, <strong>superficie</strong>, <strong>population</strong>, <strong>langues</strong>, <strong>température</strong>, <strong>météo actuelle</strong>, <strong>vitesse</strong> et <strong>orientation du vent</strong>.</li>
-        <li>Construite avec Leaflet, REST Countries et OpenWeatherMap pour des données fiables et à jour.</li>
-    </ul>
+    <h1>Carte Météo Temps Réel par Pays</h1>
+    <p class="subtitle">
+        Application web interactive affichant les données météorologiques en temps réel pour chaque pays du monde —
+        température, vent, drapeau, population et langues au survol ou au clic.
+    </p>
+    <div>
+        <span class="tech-badge"><i class="fas fa-map me-1"></i>Leaflet.js</span>
+        <span class="tech-badge"><i class="fas fa-cloud-sun me-1"></i>OpenWeatherMap API</span>
+        <span class="tech-badge"><i class="fas fa-globe me-1"></i>REST Countries API</span>
+        <span class="tech-badge"><i class="fab fa-js me-1"></i>JavaScript</span>
+        <span class="tech-badge"><i class="fas fa-bolt me-1"></i>Cache & Debounce</span>
+    </div>
 </header>
-    
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Objectifs du projet</h2>
-            <ul>
-                <li>Offrir une vue mondiale de la météo en un coup d’œil.</li>
-                <li>Afficher des infos pays clés (drapeau, population, langues, superficie).</li>
-                <li>Montrer la météo temps réel (température, vent, orientation) au point focal (capitale).</li>
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h2>📸 Aperçu</h2>
-            <img src="assets/images/portfolio/meteo.png" class="img-fluid rounded shadow" alt="Aperçu carte météo">
-        </div>
-        <div class="col-md-4">
-            <h2>📊 Contenu du Projet</h2>
-            <ul>
-                <li><strong>Leaflet</strong> pour l’affichage cartographique et l’interaction par pays.</li>
-                <li><strong>REST Countries</strong> pour drapeaux, langues, population, superficie.</li>
-                <li><strong>OpenWeatherMap</strong> pour météo actuelle, température, vent & orientation.</li>
-                <li>Optimisations : mise en cache locale et anti-requêtes multiples (debounce).</li>
-            </ul>
-        </div>
-    </div>
-</div>
-    
-<div class="container my-5">
-    <h2 class="text-center">🚀 Points Forts</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-4">
-            <h4>🗺️ Interactif & intuitif</h4>
-            <p>Survol/clic sur un pays pour des infos détaillées avec visuel (drapeau) + météo.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>⚡ Données à jour</h4>
-            <p>Météo en temps réel (capitale) : température, conditions, vitesse & orientation du vent.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>🧩 Stack légère</h4>
-            <p>Leaflet + APIs publiques (REST Countries, OpenWeatherMap), facile à déployer.</p>
-        </div>
-    </div>
-</div>
-    
-<div class="container my-5">
-    <h2 class="text-center">📌 Résultats et Insights</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Carte mondiale fluide avec mise en évidence des pays au survol.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Informations pays complètes (drapeau, langues, population, superficie).</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Météo détaillée et compréhensible (icône + description + données chiffrées).</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Performances maîtrisées grâce au cache et au debounce des survols.</p>
+
+<!-- ── STATS BANNER ── -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">195+</div>
+                    <div class="stat-label">Pays couverts</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">APIs intégrées</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">Temps réel</div>
+                    <div class="stat-label">Météo mise à jour live</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Optimisations perf (cache + debounce)</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container my-5 text-center">
-    <h2 class="text-center">🎥 Vidéo de Démonstration</h2>
-    <!-- Intégration YouTube -->
-    <div style="position:relative;padding-bottom:40.66%;height:0;overflow:hidden;background:#000;max-width:70%;margin:auto;border-radius:8px;">
-        <iframe 
+<!-- ── APERÇU + OBJECTIFS ── -->
+<div class="container my-5">
+    <div class="row align-items-center g-5">
+        <div class="col-md-6">
+            <div class="screenshot-card">
+                <img src="assets/images/portfolio/meteo.png" alt="Aperçu carte météo interactive">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="section-title">Objectifs du Projet</h2>
+            <p class="text-muted mb-4">Créer une carte mondiale fluide et interactive permettant de consulter en un coup d'œil les données météo et les informations clés de chaque pays.</p>
+            <div class="finding-box">
+                <div class="finding-label">Ambition</div>
+                <p>Offrir une expérience cartographique intuitive où chaque interaction (survol ou clic) révèle des données complètes sur le pays : météo actuelle, drapeau, population, superficie et langues parlées.</p>
+            </div>
+            <div class="finding-box">
+                <div class="finding-label">Contrainte Technique</div>
+                <p>Limiter les appels API pour éviter les surcharges et garantir une expérience fluide, même sur des interactions rapides — résolu via <strong>cache local</strong> et <strong>debounce</strong> sur les événements de survol.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PIPELINE TECHNIQUE ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center">Architecture Technique</h2>
+        <div class="pipeline-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h6>Carte Leaflet</h6>
+                <p>Initialisation de la carte mondiale avec fond OpenStreetMap et couche GeoJSON des pays</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h6>REST Countries</h6>
+                <p>Récupération des données pays : drapeau, population, superficie, langues officielles</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h6>OpenWeatherMap</h6>
+                <p>Appel API avec coordonnées de la capitale pour obtenir température, conditions et vent</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h6>Événements & Popup</h6>
+                <p>Gestion hover/clic avec affichage d'un popup enrichi sur chaque pays sélectionné</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h6>Optimisations</h6>
+                <p>Cache local pour éviter les appels dupliqués, debounce pour limiter les requêtes au survol</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── APIS ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Sources de Données</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="api-card">
+                <div class="api-icon" style="background:#e0f2fe;">🗺️</div>
+                <h5>Leaflet.js</h5>
+                <p>Librairie cartographique open-source. Rendu de la carte mondiale, couches GeoJSON, interaction par pays (hover + clic) et gestion des événements utilisateur.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="api-card">
+                <div class="api-icon" style="background:#fef9c3;">🌍</div>
+                <h5>REST Countries API</h5>
+                <p>API publique fournissant les données statiques de chaque pays : drapeau SVG, nom officiel, population, superficie totale et liste des langues officielles.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="api-card">
+                <div class="api-icon" style="background:#dcfce7;">☁️</div>
+                <h5>OpenWeatherMap API</h5>
+                <p>API météo temps réel (endpoint <code>/weather</code>) requêtée avec les coordonnées de la capitale du pays. Retourne température, description météo, vitesse et orientation du vent.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── POPUP DEMO ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <div class="row align-items-center g-4">
+            <div class="col-md-5">
+                <h2 class="section-title">Popup Interactif</h2>
+                <p class="text-muted">À chaque survol ou clic sur un pays, un popup enrichi s'affiche avec l'ensemble des données disponibles — météo temps réel incluse.</p>
+                <ul style="color:#555; font-size:0.9rem; padding-left:18px;">
+                    <li>Drapeau du pays en grand format</li>
+                    <li>Nom officiel du pays</li>
+                    <li>Population et superficie (km²)</li>
+                    <li>Langues officielles parlées</li>
+                    <li>Température actuelle (°C)</li>
+                    <li>Conditions météo (description + icône)</li>
+                    <li>Vitesse et orientation du vent</li>
+                </ul>
+            </div>
+            <div class="col-md-7">
+                <div class="popup-demo">
+                    <div class="popup-header">
+                        <span class="flag-placeholder">🇫🇷</span>
+                        <div>
+                            <div class="country-name">France</div>
+                            <div style="font-size:0.75rem; color:#94a3b8;">Capitale : Paris (48.86°N, 2.35°E)</div>
+                        </div>
+                    </div>
+                    <div class="popup-line">
+                        <span class="key">Population</span>
+                        <span class="val">67 750 000</span>
+                    </div>
+                    <div class="popup-line">
+                        <span class="key">Superficie</span>
+                        <span class="val">551 695 km²</span>
+                    </div>
+                    <div class="popup-line">
+                        <span class="key">Langues</span>
+                        <span class="val">Français</span>
+                    </div>
+                    <div class="popup-line" style="margin-top:10px;">
+                        <span class="key">🌡️ Température</span>
+                        <span class="val" style="color:#60a5fa;">12°C</span>
+                    </div>
+                    <div class="popup-line">
+                        <span class="key">☁️ Conditions</span>
+                        <span class="val">Partiellement nuageux</span>
+                    </div>
+                    <div class="popup-line">
+                        <span class="key">💨 Vent</span>
+                        <span class="val">18 km/h · Nord-Ouest</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── FONCTIONNALITÉS ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Points Forts du Projet</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">🗺️</div>
+                <h5>Interactivité Complète</h5>
+                <ul>
+                    <li>Survol pour aperçu rapide du pays</li>
+                    <li>Clic pour popup météo détaillé</li>
+                    <li>Mise en surbrillance du pays actif</li>
+                    <li>Zoom et navigation fluides</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h5>Performances Optimisées</h5>
+                <ul>
+                    <li><strong>Cache local</strong> : données mémorisées, pas de double appel API</li>
+                    <li><strong>Debounce</strong> sur les survols rapides</li>
+                    <li>Chargement asynchrone des données</li>
+                    <li>Fallback si API indisponible</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">🧩</div>
+                <h5>Stack Légère & Déployable</h5>
+                <ul>
+                    <li>Aucun framework lourd requis</li>
+                    <li>HTML + CSS + JavaScript vanilla</li>
+                    <li>APIs publiques gratuites</li>
+                    <li>Déployable sur n'importe quel hébergeur statique</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── RÉSULTATS ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Résultats</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Couverture mondiale</div>
+                    <p>Carte fluide couvrant <strong>195+ pays</strong> avec mise en évidence visuelle au survol et données enrichies disponibles pour chaque territoire.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Données pays complètes</div>
+                    <p>Affichage systématique du <strong>drapeau, des langues, de la population et de la superficie</strong> via REST Countries API — données exhaustives et fiables.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Météo temps réel</div>
+                    <p>Conditions météo <strong>actualisées en temps réel</strong> pour chaque pays : température, description illustrée par icône, vitesse et direction du vent.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Performances maîtrisées</div>
+                    <p>Grâce au <strong>cache et au debounce</strong>, les requêtes API sont réduites au minimum — expérience fluide même lors d'interactions rapides sur la carte.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── VIDÉO ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Démonstration</h2>
+    <div class="video-container">
+        <iframe
           src="https://www.youtube-nocookie.com/embed/KuN4A7RBjwc?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
-          title="YouTube video player"
+          title="Carte Météo Temps Réel - Démonstration"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          style="position:absolute;top:0;left:0;width:100%;height:100%;">
+          allowfullscreen>
         </iframe>
     </div>
-
-    <p class="text-center mt-3">
-        Code et détails :
-        <a href="#" target="_blank">GitHub</a>
-    </p>
-    <p class="text-center mt-2">
-        Problème de lecture ? 
-        <a href="https://youtu.be/KuN4A7RBjwc" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
+    <p class="text-center mt-3 text-muted" style="font-size:0.85rem;">
+        Problème de lecture ?
+        <a href="https://youtu.be/KuN4A7RBjwc" target="_blank" rel="noopener" style="color:#0F056B;">Ouvrir sur YouTube</a>
     </p>
 </div>
 
-<div class="text-center my-5">
-    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+<!-- ── CTA ── -->
+<div class="container my-5">
+    <div style="background: linear-gradient(135deg, #0F056B, #1a3a8e); border-radius: 16px; padding: 50px 40px; text-align: center;">
+        <h3 style="color:white; font-weight:700; margin-bottom:12px;">Explorer le Projet</h3>
+        <p style="color:rgba(255,255,255,0.8); margin-bottom:28px;">Retrouvez le code source complet sur GitHub — HTML, CSS et JavaScript, prêt à déployer.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="#" target="_blank" class="btn-primary-custom">
+                <i class="fab fa-github me-2"></i>Voir sur GitHub
+            </a>
+            <a href="index.html" class="btn-outline-custom">
+                <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+            </a>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

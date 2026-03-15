@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Credit Default Risk - ML & Deep Learning</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #F4F2FF;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #0F056B 0%, #3b1fa8 55%, #6d28d9 100%);
+            color: white;
+            padding: 60px 20px 50px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.1rem; font-weight: 700; margin-bottom: 12px; }
+        .header .context { font-size: 0.9rem; opacity: 0.75; margin-bottom: 14px; letter-spacing: 0.04em; }
+        .header p.subtitle {
+            font-size: 1.05rem; opacity: 0.88;
+            max-width: 800px; margin: 0 auto 25px; line-height: 1.7;
+        }
+        .tech-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15); color: #fff;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 20px; padding: 5px 16px;
+            font-size: 0.82rem; font-weight: 500; margin: 4px;
+        }
+
+        /* ── STATS BANNER ── */
+        .stats-banner { background: #0F056B; color: white; padding: 28px 0; }
+        .stat-item { text-align: center; padding: 10px 20px; border-right: 1px solid rgba(255,255,255,0.2); }
+        .stat-item:last-child { border-right: none; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #c4b5fd; line-height: 1; }
+        .stat-label { font-size: 0.75rem; opacity: 0.82; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+        /* ── SECTION TITLE ── */
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #0F056B; margin-bottom: 8px; }
+        .section-title::after {
+            content: ''; display: block; width: 50px; height: 3px;
+            background: linear-gradient(90deg, #0F056B, #6d28d9);
+            margin-top: 8px; border-radius: 2px;
+        }
+        .section-title.text-center::after { margin: 8px auto 0; }
+
+        /* ── PIPELINE ── */
+        .pipeline-steps { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 28px; }
+        .step-card {
+            background: white; border-radius: 12px; padding: 20px 16px;
+            width: 158px; text-align: center;
+            box-shadow: 0 4px 14px rgba(15,5,107,0.10);
+            border-top: 4px solid #0F056B; transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-4px); }
+        .step-number {
+            width: 34px; height: 34px; background: #0F056B; color: white;
+            border-radius: 50%; font-weight: 700; font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;
+        }
+        .step-card h6 { font-weight: 600; font-size: 0.82rem; color: #0F056B; margin-bottom: 5px; }
+        .step-card p { font-size: 0.72rem; color: #666; margin: 0; }
+
+        /* ── FINDING BOXES ── */
+        .finding-box {
+            background: white; border-left: 5px solid #0F056B;
+            border-radius: 8px; padding: 18px 22px;
+            margin-bottom: 14px; box-shadow: 0 2px 8px rgba(15,5,107,0.07);
+        }
+        .finding-box.success { border-left-color: #10b981; }
+        .finding-box.warning { border-left-color: #f59e0b; }
+        .finding-box.purple { border-left-color: #7c3aed; }
+        .finding-box .finding-label {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #0F056B; margin-bottom: 5px;
+        }
+        .finding-box.success .finding-label { color: #059669; }
+        .finding-box.warning .finding-label { color: #d97706; }
+        .finding-box.purple .finding-label { color: #7c3aed; }
+        .finding-box p { margin: 0; font-size: 0.9rem; color: #444; }
+
+        /* ── TABLES ── */
+        .result-table {
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.09); font-size: 0.85rem;
+        }
+        .result-table thead { background: #0F056B; color: white; }
+        .result-table thead th { padding: 12px 14px; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em; }
+        .result-table tbody td { padding: 10px 14px; border-bottom: 1px solid #f0edff; }
+        .result-table tbody tr:last-child td { border-bottom: none; }
+        .result-table tbody tr:hover { background: #f8f6ff; }
+        .row-best td { background: #f5f3ff !important; font-weight: 600; color: #4c1d95; }
+
+        /* ── DATA TABLES ── */
+        .data-table {
+            background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 14px rgba(15,5,107,0.09); font-size: 0.83rem;
+        }
+        .data-table thead { background: #1e1b4b; color: white; }
+        .data-table thead th { padding: 10px 14px; font-weight: 600; font-size: 0.77rem; }
+        .data-table tbody td { padding: 9px 14px; border-bottom: 1px solid #f0edff; }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+
+        /* ── SIGNAL CARDS ── */
+        .signal-card {
+            background: white; border-radius: 12px; padding: 20px;
+            box-shadow: 0 4px 14px rgba(15,5,107,0.09);
+            border-left: 4px solid #7c3aed; height: 100%;
+        }
+        .signal-auc {
+            font-size: 1.5rem; font-weight: 700; color: #7c3aed; line-height: 1;
+        }
+        .signal-var { font-size: 0.75rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin: 5px 0 8px; }
+        .signal-desc { font-size: 0.82rem; color: #555; }
+
+        /* ── ARCH BLOCK ── */
+        .arch-block {
+            background: #1e1b4b; border-radius: 14px; padding: 28px;
+            color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 0.82rem;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+        }
+        .arch-layer {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 14px; border-radius: 8px;
+            margin-bottom: 6px; background: rgba(255,255,255,0.06);
+            border-left: 3px solid #7c3aed;
+        }
+        .arch-layer.blue { border-left-color: #3b82f6; }
+        .arch-layer.green { border-left-color: #10b981; }
+        .arch-layer.red { border-left-color: #ef4444; }
+        .arch-label { color: #c4b5fd; font-size: 0.75rem; min-width: 90px; font-weight: 600; }
+        .arch-detail { color: #94a3b8; font-size: 0.78rem; }
+        .arch-arrow { text-align: center; color: #475569; font-size: 0.8rem; margin: 3px 0; }
+
+        /* ── FOLD TABLE ── */
+        .fold-table {
+            background: white; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 2px 10px rgba(15,5,107,0.08); font-size: 0.83rem;
+        }
+        .fold-table thead { background: #0F056B; color: white; }
+        .fold-table thead th { padding: 9px 14px; font-weight: 600; font-size: 0.77rem; }
+        .fold-table tbody td { padding: 8px 14px; border-bottom: 1px solid #f0edff; }
+        .fold-table tbody tr:last-child td { border-bottom: none; font-weight: 700; background: #faf5ff; }
+
+        /* ── KAGGLE BADGE ── */
+        .kaggle-badge {
+            background: #20beff; color: white;
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 600;
+        }
+
+        /* ── VIDEO ── */
+        .video-container {
+            position: relative; padding-bottom: 40.66%; height: 0; overflow: hidden;
+            max-width: 75%; margin: auto; background: #000;
+            border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* ── BUTTONS ── */
+        .btn-primary-custom {
+            background: #0F056B; color: white; border: none;
+            border-radius: 8px; padding: 12px 28px;
+            font-weight: 600; font-size: 0.95rem; text-decoration: none;
+            display: inline-block; transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary-custom:hover { background: #3b1fa8; color: white; transform: translateY(-2px); }
+        .btn-kaggle {
+            background: #20beff; color: white; border: none;
+            border-radius: 8px; padding: 12px 28px;
+            font-weight: 600; font-size: 0.95rem; text-decoration: none;
+            display: inline-block; transition: background 0.2s, transform 0.2s;
+        }
+        .btn-kaggle:hover { background: #0ea5e9; color: white; transform: translateY(-2px); }
+        .btn-outline-custom {
+            background: transparent; color: white;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 8px; padding: 10px 28px;
+            font-weight: 600; font-size: 0.95rem; text-decoration: none;
+            display: inline-block; transition: all 0.2s;
+        }
+        .btn-outline-custom:hover { background: rgba(255,255,255,0.15); color: white; transform: translateY(-2px); }
+
+        .section-bg {
+            background: white; border-radius: 16px; padding: 40px;
+            box-shadow: 0 4px 20px rgba(15,5,107,0.07);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+    <div class="context">M2 TIDE · Paris 1 Panthéon-Sorbonne · 2025/2026 · Compétition Kaggle</div>
+    <h1>Home Credit Default Risk</h1>
+    <p class="subtitle">
+        Prédiction du risque de défaut de remboursement crédit à partir de 7 tables de données financières —
+        régression logistique elastic-net et réseau de neurones tabulaire résiduel (TabResMLP) soumis sur Kaggle.
+    </p>
+    <div>
+        <span class="tech-badge"><i class="fas fa-brain me-1"></i>TabResMLP</span>
+        <span class="tech-badge"><i class="fas fa-chart-line me-1"></i>Logistic Regression</span>
+        <span class="tech-badge"><i class="fas fa-fire me-1"></i>PyTorch + CUDA</span>
+        <span class="tech-badge"><i class="fas fa-layer-group me-1"></i>Feature Engineering</span>
+        <span class="tech-badge"><i class="fas fa-trophy me-1"></i>Kaggle Competition</span>
+        <span class="tech-badge"><i class="fab fa-python me-1"></i>Python 3.12</span>
+    </div>
+</header>
+
+<!-- ── STATS BANNER ── -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">57 M+</div>
+                    <div class="stat-label">Lignes totales (7 tables)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">413</div>
+                    <div class="stat-label">Features après ingénierie</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">8%</div>
+                    <div class="stat-label">Taux de défaut (classe minoritaire)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">AUC 0.780</div>
+                    <div class="stat-label">Meilleur score Kaggle (public)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── CONTEXTE ── -->
+<div class="container my-5">
+    <div class="row align-items-start g-5">
+        <div class="col-md-6">
+            <h2 class="section-title">Contexte du Projet</h2>
+            <p class="text-muted mb-4">
+                Compétition Kaggle <strong>Home Credit Default Risk</strong> : prédire si un client aura des difficultés
+                de remboursement (<code>TARGET = 1</code>) à partir du dataset principal enrichi par
+                <strong>six tables secondaires</strong> d'historique crédit. La métrique d'évaluation est l'<strong>AUC-ROC</strong>.
+            </p>
+            <div class="finding-box purple">
+                <div class="finding-label">Déséquilibre de classes</div>
+                <p>Seulement <strong>8 % de clients en défaut</strong> (TARGET = 1) contre 92 % solvables — structurel dans le crédit bancaire. Trois choix en découlent : AUC comme métrique, <code>class_weight="balanced"</code> (LogReg) et <code>pos_weight ≈ 11,4</code> (réseau), <code>StratifiedKFold</code> pour la CV.</p>
+            </div>
+            <div class="finding-box">
+                <div class="finding-label">Deux modèles soumis sur Kaggle</div>
+                <p>Une <strong>régression logistique elastic-net</strong> (baseline robuste) et un <strong>réseau de neurones tabulaire résiduel</strong> (TabResMLP, GPU). Les deux modèles sont très proches en CV — le TabResMLP prend l'avantage sur le leaderboard Kaggle.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="section-bg">
+                <h6 class="text-muted mb-3" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em;">Tables de données</h6>
+                <table class="data-table w-100">
+                    <thead>
+                        <tr><th>Table</th><th>Lignes</th><th>Colonnes</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>application_train</strong> (principale)</td><td>307 511</td><td>122</td></tr>
+                        <tr><td>bureau</td><td>1 716 428</td><td>17</td></tr>
+                        <tr><td>bureau_balance</td><td>27 299 925</td><td>3</td></tr>
+                        <tr><td>previous_application</td><td>1 670 214</td><td>37</td></tr>
+                        <tr><td>POS_CASH_balance</td><td>10 001 358</td><td>8</td></tr>
+                        <tr><td>installments_payments</td><td>13 605 401</td><td>8</td></tr>
+                        <tr><td>credit_card_balance</td><td>3 840 312</td><td>23</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.78rem; color:#888; margin-top:8px;">Taux global de valeurs manquantes dans la table principale : 24,4 %</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PIPELINE ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center">Pipeline du Projet</h2>
+        <div class="pipeline-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h6>EDA Table Principale</h6>
+                <p>Analyse variables cible, manquantes, catégorielles et numériques — AUC univariées</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h6>EDA Tables Secondaires</h6>
+                <p>Exploration et agrégation par SK_ID_CURR (mean, max, sum, count)</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h6>Feature Engineering</h6>
+                <p>Ratios financiers, interactions EXT_SOURCE, ancienneté normalisée</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h6>Fusion & Encodage</h6>
+                <p>Merge 7 tables → 289 cols → OHE → 413 features, imputation médiane</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h6>Logistic Regression</h6>
+                <p>Elastic-net, class_weight balanced, StratifiedKFold 5 plis, StandardScaler sparse</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h6>TabResMLP</h6>
+                <p>Embeddings catégoriels + blocs résiduels + BatchNorm, GPU, early stopping AUC</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">7</div>
+                <h6>Soumission Kaggle</h6>
+                <p>2 fichiers submission, comparaison Private & Public leaderboard</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── SIGNAUX EDA ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Variables les Plus Discriminantes (AUC Univariée)</h2>
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="signal-card">
+                <div class="signal-auc">0,656</div>
+                <div class="signal-var">EXT_SOURCE_2</div>
+                <div class="signal-desc">Variable la plus discriminante. Défaut 25–30 % (score bas) vs &lt;2 % (score haut)</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="signal-card">
+                <div class="signal-auc">0,649</div>
+                <div class="signal-var">EXT_SOURCE_3</div>
+                <div class="signal-desc">Deuxième signal externe le plus puissant — corrélé à EXT_SOURCE_2</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="signal-card">
+                <div class="signal-auc">0,590</div>
+                <div class="signal-var">BUREAU__DAYS_CREDIT_MEAN</div>
+                <div class="signal-desc">Meilleure feature agrégée — ancienneté moyenne des crédits bureau</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="signal-card">
+                <div class="signal-auc">0,583</div>
+                <div class="signal-var">DAYS_BIRTH (âge)</div>
+                <div class="signal-desc">Clients &lt;30 ans : 12–15 % de défaut vs 8 % en moyenne. Risque décroît avec l'âge</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="section-bg" style="padding: 28px;">
+                <h6 class="section-title" style="font-size:1rem;">Taux de défaut par type de revenu</h6>
+                <table class="result-table w-100 mt-3">
+                    <thead><tr><th>NAME_INCOME_TYPE</th><th>Taux de défaut</th></tr></thead>
+                    <tbody>
+                        <tr><td>Sans emploi (Unemployed)</td><td style="color:#ef4444; font-weight:600;">36 %</td></tr>
+                        <tr><td>Employé (Working)</td><td>10,9 %</td></tr>
+                        <tr><td>Commercial Associate</td><td>9,2 %</td></tr>
+                        <tr><td>État / militaire</td><td>7,6 %</td></tr>
+                        <tr class="row-best"><td>Retraités (Pensioner)</td><td>5,4 %</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="finding-box">
+                <div class="finding-label">Niveau d'éducation</div>
+                <p>Relation inverse forte : <strong>10,9 %</strong> de défaut pour le secondaire inférieur → <strong>1,8 %</strong> pour les diplômes académiques.</p>
+            </div>
+            <div class="finding-box">
+                <div class="finding-label">Genre</div>
+                <p>Les hommes présentent un taux de défaut de <strong>10,1 %</strong> contre <strong>7,0 %</strong> pour les femmes.</p>
+            </div>
+            <div class="finding-box">
+                <div class="finding-label">Notation régionale</div>
+                <p>Région notée 3 (moins bien) : <strong>11,1 %</strong> de défaut. Région notée 1 : <strong>4,8 %</strong>.</p>
+            </div>
+            <div class="finding-box warning">
+                <div class="finding-label">AMT_CREDIT & AMT_INCOME — signal faible</div>
+                <p>AUC univariées ≈ 0,52–0,55. Le niveau absolu de revenu ou de crédit prédit peu — ce sont les <strong>ratios</strong> (annuité/revenu, crédit/valeur du bien) qui capturent le risque.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── FEATURE ENGINEERING ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Feature Engineering & Agrégation</h2>
+        <div class="row g-4 align-items-start">
+            <div class="col-md-5">
+                <div class="finding-box purple">
+                    <div class="finding-label">Nouvelles features créées</div>
+                    <p>
+                        <strong>Ratios financiers :</strong> annuité/revenu, crédit/valeur du bien<br>
+                        <strong>Interactions EXT_SOURCE :</strong> produits et moyennes entre les 3 scores<br>
+                        <strong>Ancienneté professionnelle</strong> normalisée par l'âge
+                    </p>
+                </div>
+                <div class="finding-box">
+                    <div class="finding-label">Résultat après fusion</div>
+                    <p>
+                        7 tables fusionnées sur <code>SK_ID_CURR</code><br>
+                        289 colonnes → OHE → <strong>413 features finales</strong><br>
+                        Imputation par la médiane pour les valeurs manquantes<br>
+                        X_train : 307 511 × 412 · X_test : 48 744 × 412
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h6 class="text-muted mb-3" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em;">Dimensions après agrégation par SK_ID_CURR</h6>
+                <table class="data-table w-100">
+                    <thead><tr><th>Table agrégée</th><th>Lignes</th><th>Colonnes</th></tr></thead>
+                    <tbody>
+                        <tr><td>bureau</td><td>305 811</td><td>63</td></tr>
+                        <tr><td>bureau_balance</td><td>305 811</td><td>4</td></tr>
+                        <tr><td>previous_application</td><td>338 857</td><td>40</td></tr>
+                        <tr><td>POS_CASH_balance</td><td>337 252</td><td>23</td></tr>
+                        <tr><td>installments_payments</td><td>339 587</td><td>14</td></tr>
+                        <tr><td>credit_card_balance</td><td>103 558</td><td>20</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.78rem; color:#888; margin-top:8px;">Agrégation : mean, max, sum, count. Variables catégorielles OHE avant agrégation.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── MODÈLES ── -->
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Logistic Regression -->
+        <div class="col-md-6">
+            <div class="section-bg">
+                <h2 class="section-title" style="font-size:1.2rem;">Régression Logistique — Baseline</h2>
+                <p style="font-size:0.88rem; color:#555; margin-bottom:16px;">
+                    Pipeline : imputation → OHE → <code>StandardScaler(with_mean=False)</code> → <code>LogisticRegression(penalty="elasticnet")</code>.<br>
+                    Le centrage est désactivé pour préserver la sparsité de la matrice OHE. La pénalité elastic-net combine L1 (sélection) et L2 (stabilité).
+                </p>
+                <table class="fold-table w-100">
+                    <thead><tr><th>Fold</th><th>AUC Validation</th></tr></thead>
+                    <tbody>
+                        <tr><td>Fold 1</td><td>0,76616</td></tr>
+                        <tr><td>Fold 2</td><td>0,77852</td></tr>
+                        <tr><td>Fold 3</td><td>0,77198</td></tr>
+                        <tr><td>Fold 4</td><td>0,77510</td></tr>
+                        <tr><td>Fold 5</td><td>0,77014</td></tr>
+                        <tr><td><strong>OOF moyen</strong></td><td><strong>0,77237</strong></td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.78rem; color:#888; margin-top:8px;">Faible variance entre folds → modèle stable, bien régularisé, sans surapprentissage.</p>
+            </div>
+        </div>
+
+        <!-- TabResMLP -->
+        <div class="col-md-6">
+            <div class="section-bg">
+                <h2 class="section-title" style="font-size:1.2rem;">Réseau de Neurones — TabResMLP</h2>
+                <div class="arch-block">
+                    <div class="arch-layer blue">
+                        <span class="arch-label">Input catég.</span>
+                        <span class="arch-detail">Embeddings appris · dim ≈ √nb_modalités · padding_idx=0 (NaN)</span>
+                    </div>
+                    <div class="arch-arrow">↓ concat</div>
+                    <div class="arch-layer blue">
+                        <span class="arch-label">Input numér.</span>
+                        <span class="arch-detail">Variables quantitatives normalisées</span>
+                    </div>
+                    <div class="arch-arrow">↓</div>
+                    <div class="arch-layer">
+                        <span class="arch-label">Bloc Résiduel</span>
+                        <span class="arch-detail">x = x + h(x) · BatchNorm1d · Dropout</span>
+                    </div>
+                    <div class="arch-arrow">↓ × N blocs</div>
+                    <div class="arch-layer green">
+                        <span class="arch-label">Sortie</span>
+                        <span class="arch-detail">Scalaire logit → BCEWithLogitsLoss · pos_weight ≈ 11,4</span>
+                    </div>
+                </div>
+                <p style="font-size:0.78rem; color:#888; margin-top:10px;">Entraînement GPU (CUDA) · Early stopping sur AUC validation · Sauvegarde du meilleur état · AUC OOF = <strong>0,77261</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── RÉSULTATS ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Résultats — Comparaison CV & Kaggle</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <h6 class="text-muted mb-3" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em;">AUC Out-of-Fold (CV interne)</h6>
+                <table class="result-table w-100">
+                    <thead><tr><th>Modèle</th><th>AUC OOF</th></tr></thead>
+                    <tbody>
+                        <tr><td>Régression Logistique (elastic-net)</td><td>0,77237</td></tr>
+                        <tr class="row-best"><td>Réseau de neurones (TabResMLP)</td><td><strong>0,77261</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6 class="text-muted mb-3" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em;">Scores <span class="kaggle-badge">Kaggle</span></h6>
+                <table class="result-table w-100">
+                    <thead><tr><th>Modèle</th><th>Private</th><th>Public</th></tr></thead>
+                    <tbody>
+                        <tr><td>Régression Logistique</td><td>0,76621</td><td>0,77502</td></tr>
+                        <tr class="row-best"><td><strong>TabResMLP</strong></td><td><strong>0,77513</strong></td><td><strong>0,78029</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mt-4 g-3">
+            <div class="col-md-6">
+                <div class="finding-box success">
+                    <div class="finding-label">Cohérence CV / Kaggle</div>
+                    <p>Les scores Kaggle sont cohérents avec les AUC OOF — confirmant l'<strong>absence de surapprentissage</strong> pour les deux modèles. La généralisation est solide.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box purple">
+                    <div class="finding-label">LR vs Deep Learning sur données tabulaires</div>
+                    <p>Sur des features agrégées complexes, la <strong>régression logistique bien régularisée est compétitive</strong> avec le réseau de neurones. Le TabResMLP prend un léger avantage (+0,9 pp public) sans optimisation poussée des hyperparamètres.</p>
+                </div>
+            </div>
+        </div>
+        <div class="finding-box warning mt-2" style="margin-bottom:0;">
+            <div class="finding-label">Perspectives d'amélioration</div>
+            <p>Ces deux modèles sont des <strong>points de départ</strong>. Des modèles à base d'arbres (<strong>LightGBM, XGBoost</strong>) capturant mieux les interactions non-linéaires permettraient d'aller plus loin sur ce type de données tabulaires à haute dimensionnalité.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ── VIDÉO ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Démonstration</h2>
+    <div class="video-container">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/VIDEO_ID_A_REMPLACER?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
+          title="Home Credit Default Risk - ML & Deep Learning"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+    </div>
+    <p class="text-center mt-3 text-muted" style="font-size:0.85rem;">
+        Problème de lecture ?
+        <a href="#" target="_blank" rel="noopener" style="color:#0F056B;">Ouvrir sur YouTube</a>
+    </p>
+</div>
+
+<!-- ── CTA ── -->
+<div class="container my-5">
+    <div style="background: linear-gradient(135deg, #0F056B, #3b1fa8); border-radius: 16px; padding: 50px 40px; text-align: center;">
+        <h3 style="color:white; font-weight:700; margin-bottom:12px;">Explorer le Projet</h3>
+        <p style="color:rgba(255,255,255,0.8); margin-bottom:28px;">Retrouvez le notebook, les fichiers de soumission Kaggle et la documentation sur GitHub.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="https://github.com/Saikou-BAH/home-credit-default-risk-ml-dl-" target="_blank" class="btn-primary-custom">
+                <i class="fab fa-github me-2"></i>Voir sur GitHub
+            </a>
+            <a href="https://www.kaggle.com/c/home-credit-default-risk" target="_blank" class="btn-kaggle">
+                <i class="fas fa-trophy me-2"></i>Compétition Kaggle
+            </a>
+            <a href="index.html" class="btn-outline-custom">
+                <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

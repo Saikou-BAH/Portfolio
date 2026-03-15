@@ -3,161 +3,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon CV Power BI - Projet</title>
+    <title>Analyse Qualité des Pommes — ML</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #F4F2FF;
             color: #333;
+            font-family: 'Poppins', sans-serif;
         }
+
+        /* ── Header ── */
         .header {
-            background-color: #0F056B;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
+            background: linear-gradient(135deg, #0F056B 0%, #2a1a9e 60%, #4a2fbd 100%);
+            color: white; padding: 60px 20px 50px;
+            text-align: center; position: relative; overflow: hidden;
         }
-        .btn-custom {
-            background-color: #0F056B;
-            border-color: #0F056B;
-            font-size: 18px;
-            border-radius: 8px;
+        .header::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%);
+            pointer-events: none;
         }
-        .btn-custom:hover {
-            background-color: #0F056B;
+        .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 14px; }
+        .header p  { font-size: 1rem; opacity: 0.88; max-width: 780px; margin: 0 auto 20px; font-weight: 300; }
+        .badge-tag {
+            display: inline-block; background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3); color: white;
+            padding: 6px 18px; border-radius: 50px; font-size: 0.82rem; margin: 4px;
         }
+
+        /* ── Stats banner ── */
+        .stats-banner { background: #0F056B; padding: 30px 0; }
+        .stat-item {
+            text-align: center; color: white;
+            border-right: 1px solid rgba(255,255,255,0.2); padding: 10px 20px;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; display: block; line-height: 1; }
+        .stat-label  { font-size: 0.78rem; opacity: 0.8; margin-top: 4px; }
+
+        /* ── Section titles ── */
+        .section-title {
+            font-size: 1.4rem; font-weight: 700; color: #0F056B;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 2px;
+            background: linear-gradient(to right, #0F056B22, transparent);
+        }
+
+        /* ── Cards ── */
         .card {
-            border: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border: none; box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-radius: 12px; height: 100%;
         }
+        .card-header-custom {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            color: white; border-radius: 12px 12px 0 0 !important;
+            padding: 14px 20px; font-weight: 600; font-size: 0.95rem;
+        }
+
+        /* ── Step cards ── */
+        .step-card {
+            background: white; border-radius: 12px; padding: 22px 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08); height: 100%;
+            border-top: 4px solid #0F056B; transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-3px); }
+        .step-number {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;
+        }
+        .step-card h5 { font-weight: 700; font-size: 0.95rem; color: #0F056B; }
+        .step-card ul { font-size: 0.83rem; color: #555; padding-left: 18px; margin: 0; }
+
+        /* ── Model cards ── */
+        .model-card {
+            background: white; border-radius: 12px; padding: 20px; text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08); height: 100%;
+            position: relative; transition: transform 0.2s;
+        }
+        .model-card:hover { transform: translateY(-3px); }
+        .model-card.best {
+            border: 2px solid #0F056B;
+            background: linear-gradient(to bottom, #eef0ff, white);
+        }
+        .model-card.second-best {
+            border: 2px solid #9b59b6;
+            background: linear-gradient(to bottom, #f5f0ff, white);
+        }
+        .best-badge {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: #0F056B; color: white;
+            padding: 3px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700;
+            white-space: nowrap;
+        }
+        .second-badge {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: #9b59b6; color: white;
+            padding: 3px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700;
+            white-space: nowrap;
+        }
+        .model-icon  { font-size: 2rem; margin-bottom: 8px; }
+        .model-name  { font-weight: 700; font-size: 0.9rem; color: #0F056B; margin-bottom: 12px; }
+        .metric-big  { font-size: 1.8rem; font-weight: 700; color: #0F056B; }
+        .metric-label { font-size: 0.72rem; color: #888; }
+        .metric-row  { display: flex; justify-content: space-around; margin-top: 12px; border-top: 1px solid #eee; padding-top: 12px; }
+        .metric-item { text-align: center; }
+        .metric-val  { font-size: 0.95rem; font-weight: 700; color: #2a1a9e; }
+        .metric-lbl  { font-size: 0.68rem; color: #888; }
+
+        /* ── Results table ── */
+        .results-table th {
+            background: #0F056B; color: white;
+            font-weight: 500; font-size: 0.85rem;
+        }
+        .results-table td { font-size: 0.84rem; vertical-align: middle; }
+        .results-table tr.best-row  { background: #eef0ff; font-weight: 600; }
+        .results-table tr.sec-row   { background: #f5f0ff; font-weight: 600; }
+        .badge-rank {
+            color: white; font-size: 0.68rem; padding: 2px 8px;
+            border-radius: 50px; margin-left: 6px; white-space: nowrap;
+        }
+        .badge-1 { background: #0F056B; }
+        .badge-2 { background: #9b59b6; }
+
+        /* ── Variable cards ── */
+        .var-card {
+            background: white; border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07); text-align: center; height: 100%;
+        }
+        .var-card .var-name { font-weight: 700; font-size: 0.88rem; color: #0F056B; }
+        .var-card .var-type { font-size: 0.72rem; margin-top: 4px; }
+        .var-normal { border-top: 3px solid #38a169; }
+        .var-notnormal { border-top: 3px solid #e53e3e; }
+        .var-target { border-top: 3px solid #d69e2e; background: #fffde7; }
+
+        /* ── Normality pills ── */
+        .pill-normal    { background: #f0fff4; color: #276749; border-radius: 50px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+        .pill-notnormal { background: #fff5f5; color: #c53030; border-radius: 50px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+
+        /* ── Confusion matrix ── */
+        .cm-cell {
+            border-radius: 10px; padding: 18px; text-align: center; font-weight: 700;
+        }
+        .cm-tp { background: #f0fff4; color: #276749; border: 2px solid #9ae6b4; }
+        .cm-tn { background: #f0fff4; color: #276749; border: 2px solid #9ae6b4; }
+        .cm-fp { background: #fff5f5; color: #c53030; border: 2px solid #fed7d7; }
+        .cm-fn { background: #fff5f5; color: #c53030; border: 2px solid #fed7d7; }
+        .cm-val   { font-size: 2rem; }
+        .cm-label { font-size: 0.72rem; font-weight: 400; margin-top: 4px; }
+
+        /* ── Pipeline ── */
+        .pipeline-step {
+            background: white; border-radius: 10px; padding: 18px 16px; text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07); height: 100%;
+        }
+        .pipeline-step .step-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px; color: white; font-size: 1.1rem;
+        }
+        .pipeline-step h6 { font-weight: 700; font-size: 0.88rem; color: #0F056B; }
+        .pipeline-step p  { font-size: 0.78rem; color: #666; margin: 0; }
+        .pipeline-arrow {
+            display: flex; align-items: center; justify-content: center;
+            color: #0F056B; font-size: 1.4rem; opacity: 0.5;
+        }
+
+        /* ── Finding box ── */
+        .finding-box {
+            background: linear-gradient(135deg, #eef0ff, #f8f7ff);
+            border-left: 4px solid #0F056B;
+            border-radius: 0 10px 10px 0; padding: 18px 22px;
+        }
+
+        /* ── Video ── */
         .video-container {
-            position: relative;
-            padding-bottom: 40.66%;
-            height: 0;
-            overflow: hidden;
-            max-width: 70%;
-            margin : auto;
-            background: #000;
-            border-radius: 8px;
+            position: relative; padding-bottom: 40%;
+            height: 0; overflow: hidden;
+            max-width: 70%; margin: auto;
+            background: #000; border-radius: 12px;
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* ── Buttons ── */
+        .btn-main {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border: none; color: white; border-radius: 8px;
+            padding: 10px 28px; font-weight: 600; transition: opacity 0.2s;
         }
-        .highlight {
-            color: #0F056B;
+        .btn-main:hover { opacity: 0.88; color: white; }
+        .btn-outline-main {
+            border: 2px solid #0F056B; color: #0F056B;
+            border-radius: 8px; padding: 10px 28px;
+            font-weight: 600; background: transparent; transition: all 0.2s;
         }
-        .portfolio-media {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
+        .btn-outline-main:hover { background: #0F056B; color: white; }
     </style>
 </head>
 <body>
-    
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <header class="header">
-    <h1><strong>🍏 Analyse de la Qualité des Pommes avec Machine Learning</strong></h1>
-    <ul>
-        <li>L’objectif est d’identifier les facteurs influençant la qualité des pommes, de détecter des valeurs aberrantes et d’optimiser la précision des prédictions.</li>
-        <li>J’ai appliqué différentes approches d’apprentissage automatique, en testant et comparant plusieurs modèles pour trouver la meilleure solution.</li>
-    </ul>
+    <div class="container">
+        <h1>🍏 Analyse de la Qualité des Pommes avec Machine Learning</h1>
+        <p>Classification binaire des pommes (bonne/mauvaise qualité) à partir de <strong>7 caractéristiques physiques</strong>. Comparaison de 5 algorithmes avec optimisation des hyperparamètres via <strong>RandomizedSearchCV</strong>.</p>
+        <div class="mt-3">
+            <span class="badge-tag"><i class="fab fa-python me-1"></i>Python</span>
+            <span class="badge-tag"><i class="fas fa-bolt me-1"></i>XGBoost</span>
+            <span class="badge-tag"><i class="fas fa-vector-square me-1"></i>SVC</span>
+            <span class="badge-tag"><i class="fas fa-tree me-1"></i>Random Forest · LightGBM</span>
+            <span class="badge-tag"><i class="fas fa-sliders-h me-1"></i>RandomizedSearchCV</span>
+        </div>
+    </div>
 </header>
-    
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Objectifs du projet</h2>
-            <ul>
-                <li>Détecter les pommes de bonne et mauvaise qualité à partir de leurs caractéristiques.</li>
-                <li>Comparer différentes méthodes (XGBoost, SVC, Random Forest, etc.) pour sélectionner la meilleure approche.</li>
-                <li>Améliorer l’interprétabilité des résultats à l’aide de visualisations et d’analyses statistiques.</li>
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h2>Modèle</h2>
-            <img src="assets/images/portfolio/image.png" class="img-fluid rounded shadow" alt="Dashboard Power BI">
-        </div>
-        <div class="col-md-4">
-            <h2>📊 Contenu du Projet</h2>
-            <ul>
-                <li>Prétraitement des données : Nettoyage, gestion des valeurs aberrantes et normalisation.</li>
-                <li>Analyse exploratoire : Étude des corrélations et visualisation des distributions.</li>
-                <li>Modélisation : Comparaison de XGBoost, Random Forest, SVM, KNN et LightGBM avec ajustement des hyperparamètres.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-    
-<div class="container my-5">
-    <h2 class="text-center">🚀 Pourquoi ce Projet est Unique ?</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-4">
-            <h4>🔥 Approche comparative des modèles</h4>
-            <p>J’ai testé plusieurs modèles de machine learning pour identifier le plus performant.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>📊 Interprétation et visualisation des résultats</h4>
-            <p>J’ai ajouté des graphiques et courbes ROC pour une meilleure compréhension des performances des modèles.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>🎯 Optimisation des hyperparamètres</h4>
-            <p>J’ai appliqué une recherche d’hyperparamètres avancée pour améliorer la classification.</p>
-        </div>
-    </div>
-</div>
-    
-<div class="container my-5">
-    <h2 class="text-center">📌 Résultats et Insights</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>XGBoost Optimisé et SVC Optimisé sont les meilleurs modèles avec une accuracy supérieure à 96%.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>La courbe ROC montre une excellente capacité de séparation entre les bonnes et mauvaises pommes.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>La variable Sweetness et Size ont un impact significatif sur la qualité des pommes.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Les modèles robustes aux valeurs aberrantes (XGBoost, Random Forest) offrent de meilleures performances.</p>
+
+<!-- ═══════════════════════ STATS BANNER ═══════════════════════ -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">4 000</span>
+                    <div class="stat-label">Observations (après nettoyage)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">96,3%</span>
+                    <div class="stat-label">Accuracy — XGBoost optimisé</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">0,97</span>
+                    <div class="stat-label">AUC-ROC — SVC optimisé</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">Algorithmes comparés</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════ DONNÉES ═══════════════════════ -->
 <div class="container my-5">
-    <h2 class="text-center">🎥 Vidéo de Démonstration</h2>
-    <!-- Intégration YouTube -->
+    <div class="section-title"><i class="fas fa-database"></i> Dataset & Variables</div>
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div class="section-title" style="font-size:1rem;"><i class="fas fa-vial"></i> Normalité des variables (test de Shapiro-Wilk)</div>
+            <div class="row g-2">
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-normal">
+                        <div class="var-name">Size</div>
+                        <div class="var-type"><span class="pill-normal">✓ Normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">moy. −0,50</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-notnormal">
+                        <div class="var-name">Weight</div>
+                        <div class="var-type"><span class="pill-notnormal">✗ Non normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">moy. −0,99</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-notnormal">
+                        <div class="var-name">Sweetness</div>
+                        <div class="var-type"><span class="pill-notnormal">✗ Non normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">corr. −0,25</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-notnormal">
+                        <div class="var-name">Crunchiness</div>
+                        <div class="var-type"><span class="pill-notnormal">✗ Non normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">moy. 0,98</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-notnormal">
+                        <div class="var-name">Juiciness</div>
+                        <div class="var-type"><span class="pill-notnormal">✗ Non normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">moy. 0,51</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-normal">
+                        <div class="var-name">Ripeness</div>
+                        <div class="var-type"><span class="pill-normal">✓ Normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">moy. 0,50</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-normal">
+                        <div class="var-name">Acidity</div>
+                        <div class="var-type"><span class="pill-normal">✓ Normale</span></div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">float64</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="var-card var-target">
+                        <div class="var-name">Quality</div>
+                        <div class="var-type" style="color:#b7770d; font-size:0.72rem; font-weight:600;">🎯 Cible</div>
+                        <div style="font-size:0.75rem; color:#555; margin-top:6px;">~50% / 50%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 d-flex flex-column gap-3">
+            <div class="card p-4">
+                <h6 style="color:#0F056B; font-weight:700;">📋 Caractéristiques du dataset</h6>
+                <div class="row text-center g-2 mt-1">
+                    <div class="col-6">
+                        <div style="font-size:1.3rem; font-weight:700; color:#0F056B;">4 001 → 4 000</div>
+                        <div style="font-size:0.72rem; color:#888;">1 ligne supprimée (dropna)</div>
+                    </div>
+                    <div class="col-6">
+                        <div style="font-size:1.3rem; font-weight:700; color:#0F056B;">80 / 20</div>
+                        <div style="font-size:0.72rem; color:#888;">Train (3 200) / Test (800)</div>
+                    </div>
+                    <div class="col-6">
+                        <div style="font-size:1.3rem; font-weight:700; color:#276749;">~50%</div>
+                        <div style="font-size:0.72rem; color:#888;">Bonne qualité</div>
+                    </div>
+                    <div class="col-6">
+                        <div style="font-size:1.3rem; font-weight:700; color:#c53030;">~50%</div>
+                        <div style="font-size:0.72rem; color:#888;">Mauvaise qualité</div>
+                    </div>
+                </div>
+            </div>
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.88rem;"><i class="fas fa-lightbulb me-2"></i>Variables les plus corrélées à la qualité</strong>
+                <p style="font-size:0.83rem; margin-top:8px; margin-bottom:0;"><strong>Sweetness (−0,25)</strong> et <strong>Size (−0,24)</strong> ont l'impact le plus significatif sur la variable cible. Toutes les variables contiennent des valeurs aberrantes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ PIPELINE ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-cogs"></i> Pipeline de modélisation</div>
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-broom"></i></div>
+                    <h6>Nettoyage</h6>
+                    <p>dropna() · conversion types · détection outliers (Shapiro-Wilk)</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h6>Mise à l'échelle</h6>
+                    <p>MinMaxScaler · StandardScaler · RobustScaler testés</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-robot"></i></div>
+                    <h6>5 modèles</h6>
+                    <p>XGBoost · SVC · RF · LightGBM · KNN</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+                    <h6>Optimisation</h6>
+                    <p>RandomizedSearchCV · cv=5 · n_iter=20</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+                    <h6>Évaluation</h6>
+                    <p>Accuracy · AUC-ROC · F1 · Matrice de confusion</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ MODÈLES (AVANT OPTIMISATION) ═══════════════════════ -->
+<div class="container my-5">
+    <div class="section-title"><i class="fas fa-layer-group"></i> Comparaison avant optimisation</div>
+    <div class="row g-3">
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="model-card">
+                <div class="model-icon">⚡</div>
+                <div class="model-name">XGBoost</div>
+                <div class="metric-big">90,6%</div>
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-row">
+                    <div class="metric-item"><div class="metric-val">0,965</div><div class="metric-lbl">AUC</div></div>
+                    <div class="metric-item"><div class="metric-val">0,91</div><div class="metric-lbl">F1</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="model-card">
+                <div class="model-icon">🌲</div>
+                <div class="model-name">Random Forest</div>
+                <div class="metric-big">89,9%</div>
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-row">
+                    <div class="metric-item"><div class="metric-val">0,957</div><div class="metric-lbl">AUC</div></div>
+                    <div class="metric-item"><div class="metric-val">0,90</div><div class="metric-lbl">F1</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="model-card">
+                <div class="model-icon">🚀</div>
+                <div class="model-name">LightGBM</div>
+                <div class="metric-big">90,6%</div>
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-row">
+                    <div class="metric-item"><div class="metric-val">0,961</div><div class="metric-lbl">AUC</div></div>
+                    <div class="metric-item"><div class="metric-val">0,91</div><div class="metric-lbl">F1</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="model-card">
+                <div class="model-icon">📐</div>
+                <div class="model-name">SVC</div>
+                <div class="metric-big">90,5%</div>
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-row">
+                    <div class="metric-item"><div class="metric-val">0,959</div><div class="metric-lbl">AUC</div></div>
+                    <div class="metric-item"><div class="metric-val">0,91</div><div class="metric-lbl">F1</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="model-card">
+                <div class="model-icon">🔍</div>
+                <div class="model-name">KNN</div>
+                <div class="metric-big">88,7%</div>
+                <div class="metric-label">Accuracy</div>
+                <div class="metric-row">
+                    <div class="metric-item"><div class="metric-val">0,951</div><div class="metric-lbl">AUC</div></div>
+                    <div class="metric-item"><div class="metric-val">0,89</div><div class="metric-lbl">F1</div></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ═══════════════════════ APRÈS OPTIMISATION ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-trophy"></i> Résultats après optimisation (RandomizedSearchCV)</div>
+        <div class="row g-4">
+
+            <!-- Table -->
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header-custom">Tableau comparatif — tous modèles</div>
+                    <div class="card-body p-0">
+                        <table class="table results-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Modèle</th>
+                                    <th class="text-center">Accuracy</th>
+                                    <th class="text-center">AUC-ROC</th>
+                                    <th class="text-center">Optimisation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="best-row">
+                                    <td>XGBoost Optimisé <span class="badge-rank badge-1">🥇 #1</span></td>
+                                    <td class="text-center">96,3%</td>
+                                    <td class="text-center">0,963</td>
+                                    <td class="text-center">n_iter=20 · cv=5</td>
+                                </tr>
+                                <tr class="sec-row">
+                                    <td>SVC Optimisé <span class="badge-rank badge-2">🥈 #2</span></td>
+                                    <td class="text-center">95,9%</td>
+                                    <td class="text-center">0,970</td>
+                                    <td class="text-center">n_iter=10 · cv=5</td>
+                                </tr>
+                                <tr>
+                                    <td>LightGBM</td>
+                                    <td class="text-center">90,6%</td>
+                                    <td class="text-center">0,961</td>
+                                    <td class="text-center">défaut</td>
+                                </tr>
+                                <tr>
+                                    <td>XGBoost (défaut)</td>
+                                    <td class="text-center">90,6%</td>
+                                    <td class="text-center">0,965</td>
+                                    <td class="text-center">défaut</td>
+                                </tr>
+                                <tr>
+                                    <td>Random Forest</td>
+                                    <td class="text-center">89,9%</td>
+                                    <td class="text-center">0,957</td>
+                                    <td class="text-center">défaut</td>
+                                </tr>
+                                <tr>
+                                    <td>SVC (défaut)</td>
+                                    <td class="text-center">90,5%</td>
+                                    <td class="text-center">0,959</td>
+                                    <td class="text-center">défaut</td>
+                                </tr>
+                                <tr>
+                                    <td>KNN</td>
+                                    <td class="text-center">88,7%</td>
+                                    <td class="text-center">0,951</td>
+                                    <td class="text-center">défaut</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best model cards + confusion matrix -->
+            <div class="col-md-5 d-flex flex-column gap-3">
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="model-card best">
+                            <span class="best-badge">🥇 Meilleur accuracy</span>
+                            <div class="model-icon mt-2">⚡</div>
+                            <div class="model-name">XGBoost Opt.</div>
+                            <div class="metric-big">96,3%</div>
+                            <div class="metric-label">Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="model-card second-best">
+                            <span class="second-badge">🥈 Meilleur AUC</span>
+                            <div class="model-icon mt-2">📐</div>
+                            <div class="model-name">SVC Opt.</div>
+                            <div class="metric-big">0,970</div>
+                            <div class="metric-label">AUC-ROC</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confusion matrix XGBoost défaut -->
+                <div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#0F056B; margin-bottom:8px;"><i class="fas fa-th me-1"></i> Matrice de confusion — XGBoost défaut (800 test)</div>
+                    <div class="row g-2">
+                        <div class="col-6"><div class="cm-cell cm-tn"><div class="cm-val">354</div><div class="cm-label">Vrais Négatifs</div></div></div>
+                        <div class="col-6"><div class="cm-cell cm-fp"><div class="cm-val">31</div><div class="cm-label">Faux Positifs</div></div></div>
+                        <div class="col-6"><div class="cm-cell cm-fn"><div class="cm-val">45</div><div class="cm-label">Faux Négatifs</div></div></div>
+                        <div class="col-6"><div class="cm-cell cm-tp"><div class="cm-val">370</div><div class="cm-label">Vrais Positifs</div></div></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Hyperparams -->
+        <div class="row g-4 mt-2">
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <strong style="color:#0F056B; font-size:0.88rem;"><i class="fas fa-sliders-h me-2"></i>Hyperparamètres XGBoost (RandomizedSearchCV)</strong>
+                    <p style="font-size:0.82rem; margin-top:8px; margin-bottom:0;">Paramètres explorés : <code>n_estimators</code> [50, 100, 200, 300, 500] · <code>max_depth</code> [3, 5, 7, 10] · <code>learning_rate</code> [0.01, 0.05, 0.1, 0.2] · <code>subsample</code> · <code>colsample_bytree</code> · <code>gamma</code></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box" style="border-color: #9b59b6; background: linear-gradient(135deg, #f5f0ff, #faf8ff);">
+                    <strong style="color:#9b59b6; font-size:0.88rem;"><i class="fas fa-sliders-h me-2"></i>Hyperparamètres SVC (RandomizedSearchCV)</strong>
+                    <p style="font-size:0.82rem; margin-top:8px; margin-bottom:0;">Paramètres explorés : <code>C</code> [0.1, 1, 10, 100] · <code>kernel</code> [linear, rbf, poly] · <code>gamma</code> [scale, auto, 0.1, 1] · scoring = accuracy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ VIDÉO ═══════════════════════ -->
+<div class="container my-5">
+    <h2 class="text-center mb-4" style="color:#0F056B; font-weight:700;"><i class="fas fa-play-circle me-2"></i>Vidéo de Démonstration</h2>
     <div class="video-container">
-        <iframe 
+        <iframe
           src="https://www.youtube-nocookie.com/embed/or17o-gHZZs?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
-          title="YouTube video player"
+          title="Analyse Qualité des Pommes — Machine Learning"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
     </div>
-
-    <p class="text-center mt-3">
-        Découvrez le projet en détail sur 
-        <a href="https://github.com/Saikou-BAH/fruit_quality" target="_blank">
-            GitHub
-        </a> et explorez les analyses.
-    </p>
-    <p class="text-center mt-2">
-        Problème de lecture ? 
-        <a href="https://youtu.be/or17o-gHZZs" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
+    <p class="text-center mt-3" style="font-size:0.9rem;">
+        Problème de lecture ?
+        <a href="https://youtu.be/or17o-gHZZs" target="_blank" rel="noopener" style="color:#0F056B; font-weight:600;">Ouvrir sur YouTube</a>
     </p>
 </div>
 
-<div class="text-center my-5">
-    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<div class="container my-5 text-center">
+    <a href="https://github.com/Saikou-BAH/fruit_quality" target="_blank" class="btn btn-main me-3">
+        <i class="fab fa-github me-2"></i>Voir sur GitHub
+    </a>
+    <a href="index.html" class="btn btn-outline-main">
+        <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+    </a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

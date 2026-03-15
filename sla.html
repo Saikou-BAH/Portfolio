@@ -3,165 +3,620 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prédiction de la Survie à 1 an - SLA</title>
+    <title>Prédiction Survie SLA — Maladie de Charcot</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #F4F2FF;
             color: #333;
+            font-family: 'Poppins', sans-serif;
         }
+
+        /* ── Header ── */
         .header {
-            background-color: #0F056B;
+            background: linear-gradient(135deg, #0F056B 0%, #2a1a9e 60%, #4a2fbd 100%);
             color: white;
-            padding: 40px 0;
+            padding: 60px 20px 50px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-custom {
-            background-color: #0F056B;
-            border-color: #0F056B;
-            font-size: 18px;
-            border-radius: 8px;
+        .header::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%);
+            pointer-events: none;
         }
-        .btn-custom:hover {
-            background-color: #0F056B;
+        .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 14px; }
+        .header p  { font-size: 1rem; opacity: 0.88; max-width: 780px; margin: 0 auto 20px; font-weight: 300; }
+        .badge-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 18px;
+            border-radius: 50px; font-size: 0.82rem; margin: 4px;
         }
+
+        /* ── Stats banner ── */
+        .stats-banner { background: #0F056B; padding: 30px 0; }
+        .stat-item {
+            text-align: center; color: white;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 20px;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; display: block; line-height: 1; }
+        .stat-label  { font-size: 0.78rem; opacity: 0.8; margin-top: 4px; }
+
+        /* ── Section titles ── */
+        .section-title {
+            font-size: 1.4rem; font-weight: 700; color: #0F056B;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 2px;
+            background: linear-gradient(to right, #0F056B22, transparent);
+        }
+
+        /* ── Cards ── */
         .card {
             border: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-radius: 12px; height: 100%;
         }
-        .highlight {
-            color: #0F056B;
+        .card-header-custom {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            color: white; border-radius: 12px 12px 0 0 !important;
+            padding: 14px 20px; font-weight: 600; font-size: 0.95rem;
         }
-        .portfolio-media {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
+
+        /* ── Step cards ── */
+        .step-card {
+            background: white; border-radius: 12px; padding: 22px 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08); height: 100%;
+            border-top: 4px solid #0F056B; transition: transform 0.2s;
         }
+        .step-card:hover { transform: translateY(-3px); }
+        .step-number {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;
+        }
+        .step-card h5 { font-weight: 700; font-size: 0.95rem; color: #0F056B; }
+        .step-card ul { font-size: 0.83rem; color: #555; padding-left: 18px; margin: 0; }
+
+        /* ── Model comparison table ── */
+        .results-table th {
+            background: #0F056B; color: white;
+            font-weight: 500; font-size: 0.85rem;
+        }
+        .results-table td { font-size: 0.84rem; vertical-align: middle; }
+        .results-table tr.best-row { background: #eef0ff; font-weight: 600; }
+        .badge-best {
+            background: #0F056B; color: white;
+            font-size: 0.68rem; padding: 2px 8px;
+            border-radius: 50px; margin-left: 6px; white-space: nowrap;
+        }
+
+        /* ── SMOTE comparison cards ── */
+        .smote-card {
+            border-radius: 12px; padding: 20px; text-align: center;
+            height: 100%; box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+        .smote-before { background: #fff5f5; border: 2px solid #ffcccc; }
+        .smote-after  { background: #f0fff4; border: 2px solid #9ae6b4; }
+        .smote-card h5 { font-weight: 700; font-size: 0.9rem; }
+        .smote-val { font-size: 2rem; font-weight: 700; }
+        .smote-before .smote-val { color: #c53030; }
+        .smote-after  .smote-val { color: #276749; }
+
+        /* ── Variable significance ── */
+        .var-sig-card {
+            background: white; border-radius: 10px; padding: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+            border-left: 4px solid #0F056B; height: 100%;
+        }
+        .var-sig-card h6 { font-weight: 700; font-size: 0.88rem; color: #0F056B; margin-bottom: 4px; }
+        .var-sig-card p  { font-size: 0.8rem; color: #555; margin: 0; }
+
+        /* ── Onset comparison ── */
+        .onset-card {
+            border-radius: 10px; padding: 18px; text-align: center; color: white; font-weight: 600;
+        }
+        .onset-spinal { background: linear-gradient(135deg, #276749, #38a169); }
+        .onset-bulbar { background: linear-gradient(135deg, #9b2c2c, #c53030); }
+        .onset-val    { font-size: 1.8rem; font-weight: 700; }
+        .onset-label  { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
+
+        /* ── Finding box ── */
+        .finding-box {
+            background: linear-gradient(135deg, #eef0ff, #f8f7ff);
+            border-left: 4px solid #0F056B;
+            border-radius: 0 10px 10px 0;
+            padding: 18px 22px;
+        }
+
+        /* ── Pipeline ── */
+        .pipeline-step {
+            background: white; border-radius: 10px;
+            padding: 18px 16px; text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07); height: 100%;
+        }
+        .pipeline-step .step-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px; color: white; font-size: 1.1rem;
+        }
+        .pipeline-step h6 { font-weight: 700; font-size: 0.88rem; color: #0F056B; }
+        .pipeline-step p  { font-size: 0.78rem; color: #666; margin: 0; }
+        .pipeline-arrow {
+            display: flex; align-items: center; justify-content: center;
+            color: #0F056B; font-size: 1.4rem; opacity: 0.5;
+        }
+
+        /* ── Video ── */
         .video-container {
-            position: relative;
-            padding-bottom: 40.66%;
-            height: 0;
-            overflow: hidden;
-            max-width: 70%;
-            margin : auto;
-            background: #000;
-            border-radius: 8px;
+            position: relative; padding-bottom: 40%;
+            height: 0; overflow: hidden;
+            max-width: 70%; margin: auto;
+            background: #000; border-radius: 12px;
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* ── Buttons ── */
+        .btn-main {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border: none; color: white; border-radius: 8px;
+            padding: 10px 28px; font-weight: 600; transition: opacity 0.2s;
+        }
+        .btn-main:hover { opacity: 0.88; color: white; }
+        .btn-outline-main {
+            border: 2px solid #0F056B; color: #0F056B;
+            border-radius: 8px; padding: 10px 28px;
+            font-weight: 600; background: transparent; transition: all 0.2s;
+        }
+        .btn-outline-main:hover { background: #0F056B; color: white; }
+
+        /* ── Var tags ── */
+        .var-tag {
+            display: inline-block; background: #eef0ff; color: #0F056B;
+            border-radius: 6px; padding: 4px 12px;
+            font-size: 0.78rem; margin: 3px; font-weight: 500;
+        }
+
+        /* ── Alert médical ── */
+        .medical-alert {
+            background: linear-gradient(135deg, #fff8e1, #fffde7);
+            border-left: 4px solid #f6ad55;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 20px;
         }
     </style>
 </head>
 <body>
-    
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <header class="header">
-    <h1><strong>Prédiction de la Survie à 1 an chez les Patients Atteints de SLA</strong></h1>
-    <ul>
-        <li>Anticiper la survie des patients SLA pour une meilleure prise en charge.</li>
-        <li>Identifier les patients à haut risque grâce à l'intelligence artificielle.</li>
-        <li>Modèle précis pour une intervention médicale rapide et efficace.</li>
-    </ul>
+    <div class="container">
+        <h1>🧬 Prédiction de la Survie à 1 an — SLA (Maladie de Charcot)</h1>
+        <p>Modèle d'intelligence artificielle pour identifier les patients à haut risque de décès précoce chez les patients atteints de Sclérose Latérale Amyotrophique, afin d'optimiser la prise en charge clinique.</p>
+        <div class="mt-3">
+            <span class="badge-tag"><i class="fab fa-python me-1"></i>Python</span>
+            <span class="badge-tag"><i class="fas fa-bolt me-1"></i>XGBoost</span>
+            <span class="badge-tag"><i class="fas fa-balance-scale me-1"></i>SMOTE</span>
+            <span class="badge-tag"><i class="fas fa-chart-line me-1"></i>AUC-ROC</span>
+            <span class="badge-tag"><i class="fas fa-heartbeat me-1"></i>IA médicale</span>
+        </div>
+    </div>
 </header>
 
-<div class="container my-5">
-    <div class="row">
-        <!-- Objectifs du projet -->
-        <div class="col-md-4">
-            <h2>Objectifs du projet</h2>
-            <ul>
-                <li>Identifier rapidement les patients à haut risque de décès précoce.</li>
-                <li>Optimiser la prise en charge clinique par une anticipation efficace.</li>
-                <li>Proposer un modèle fiable avec un fort pouvoir prédictif.</li>
-            </ul>
-        </div>
-        <!-- Graphiques -->
-        <div class="col-md-4">
-            <h2>Graphiques</h2>
-            <img src="assets/images/portfolio/sla_image.png" class="img-fluid rounded shadow" alt="Graphiques SLA">
-        </div>
-        <!-- Compétences clés -->
-        <div class="col-md-4">
-            <h2>Compétences clés</h2>
-            <ul>
-                <li>Analyse exploratoire poussée avec visualisations pertinentes.</li>
-                <li>Gestion avancée du déséquilibre de données avec SMOTE.</li>
-                <li>Modélisation prédictive avec XGBoost, Naïve Bayes et régression logistique.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="container my-5">
-    <h2 class="text-center">Les Atouts du Projet</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-4">
-            <h4>🔹 Nettoyage & Préparation Rigoureux</h4>
-            <p>🔍 Gestion minutieuse des données manquantes et aberrantes, sélection précise des variables.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>📊 Analyse Exploratoire Approfondie</h4>
-            <p>📈 Identification des facteurs clés de survie à travers analyses statistiques et visuelles approfondies.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>📈 Modélisation Avancée & Validation</h4>
-            <p>🕰️ Utilisation de techniques avancées comme XGBoost et SMOTE, validation robuste sur jeu de test indépendant.</p>
+<!-- ═══════════════════════ STATS BANNER ═══════════════════════ -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">3 716</span>
+                    <div class="stat-label">Patients analysés</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">0,947</span>
+                    <div class="stat-label">AUC-ROC — XGBoost + SMOTE</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">83%</span>
+                    <div class="stat-label">Rappel — patients décédés (test)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <div class="stat-label">Variables cliniques</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════ CONTEXTE & DONNÉES ═══════════════════════ -->
 <div class="container my-5">
-    <h2 class="text-center">Résultats et Évaluation du Modèle</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <h3 class="text-primary">Meilleur Modèle</h3>
-            <p>XGBoost avec SMOTE (sans sélection de variables) identifié comme optimal.</p>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="section-title"><i class="fas fa-info-circle"></i> Contexte médical</div>
+            <div class="card p-4">
+                <p style="font-size:0.9rem;">La SLA est une maladie neurodégénérative grave et d'évolution rapide. Ce projet vise à <strong>anticiper la survie à 1 an</strong> dès la première visite (T1) pour aider les équipes médicales à prioriser les soins.</p>
+                <div class="medical-alert mt-3">
+                    <strong style="font-size:0.88rem; color:#b7770d;"><i class="fas fa-exclamation-triangle me-2"></i>Déséquilibre de classes</strong>
+                    <p style="font-size:0.83rem; margin-top:6px; margin-bottom:0;"><strong>78,3%</strong> des patients ont survécu à 1 an contre <strong>21,7%</strong> de décès. Ce déséquilibre a nécessité l'utilisation de <strong>SMOTE</strong> pour rééquilibrer les classes (→ 2 916 observations par classe).</p>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">Performance Élevée</h3>
-            <p>AUC de 0.9469 en entraînement, démontrant une excellente capacité discriminante.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">Validation Robuste</h3>
-            <p>Confirmation des résultats avec une AUC de 0.8046 sur les données inédites du jeu de test.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">Impact Clinique</h3>
-            <p>Identification fiable de 83 % des patients décédés dans les 12 mois.</p>
+        <div class="col-md-6">
+            <div class="section-title"><i class="fas fa-database"></i> Données & population</div>
+            <div class="card p-4">
+                <div class="row text-center g-3 mb-3">
+                    <div class="col-4">
+                        <div style="font-size:1.3rem; font-weight:700; color:#0F056B;">23 290</div>
+                        <div style="font-size:0.72rem; color:#888;">Observations brutes</div>
+                    </div>
+                    <div class="col-4">
+                        <div style="font-size:1.3rem; font-weight:700; color:#0F056B;">62,5%</div>
+                        <div style="font-size:0.72rem; color:#888;">Hommes</div>
+                    </div>
+                    <div class="col-4">
+                        <div style="font-size:1.3rem; font-weight:700; color:#0F056B;">~55 ans</div>
+                        <div style="font-size:0.72rem; color:#888;">Âge moyen</div>
+                    </div>
+                </div>
+                <span class="var-tag">Âge</span>
+                <span class="var-tag">Poids / Taille</span>
+                <span class="var-tag">ALSFRS</span>
+                <span class="var-tag">Capacité vitale forcée</span>
+                <span class="var-tag">Début spinal / bulbaire</span>
+                <span class="var-tag">Durée des symptômes</span>
+                <span class="var-tag">Tension artérielle</span>
+                <span class="var-tag">Pouls</span>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════ ONSET TYPES ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-brain"></i> Types de début — facteur pronostique clé</div>
+        <p style="font-size:0.88rem; color:#555; margin-bottom:20px;">Le type de début (spinal vs bulbaire) est un facteur hautement significatif (Chi², p &lt; 0,00001) pour la survie à 1 an.</p>
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="onset-card onset-spinal">
+                    <div class="onset-val">78%</div>
+                    <div class="onset-label">🟢 Début spinal<br><small>Meilleur pronostic</small></div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="onset-card onset-bulbar">
+                    <div class="onset-val">21%</div>
+                    <div class="onset-label">🔴 Début bulbaire<br><small>Pronostic défavorable</small></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box h-100 d-flex flex-column justify-content-center">
+                    <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-chart-bar me-2"></i>Variables les plus significatives (ANOVA, p &lt; 0,00001)</strong>
+                    <ul style="font-size:0.84rem; margin-top:10px; margin-bottom:0;">
+                        <li><strong>Âge</strong> — patients décédés plus âgés en moyenne</li>
+                        <li><strong>Poids</strong> — poids faible associé à la mortalité précoce</li>
+                        <li><strong>Capacité vitale forcée (FVC)</strong> — capacité plus basse = risque accru</li>
+                        <li><strong>Score ALSFRS</strong> — score plus bas = statut fonctionnel dégradé</li>
+                        <li><strong>Durée des symptômes</strong> — durée plus longue = meilleure survie</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ DÉMARCHE ═══════════════════════ -->
 <div class="container my-5">
-    <h2 class="text-center">🎥 Vidéo de Démonstration</h2>
-    <!-- Intégration YouTube -->
+    <div class="section-title"><i class="fas fa-list-ol"></i> Démarche du projet</div>
+    <div class="row g-3">
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h5>Préparation des données</h5>
+                <ul>
+                    <li>Chargement de 23 290 observations, 19 colonnes</li>
+                    <li>Filtrage sur la période initiale T1 → 3 716 patients</li>
+                    <li>Création de la variable cible via le score ALSFRS</li>
+                    <li>Gestion des valeurs manquantes et aberrantes</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h5>Analyse exploratoire</h5>
+                <ul>
+                    <li>Analyse univariée : distribution survie (78,3% / 21,7%)</li>
+                    <li>Analyse bivariée : Chi² (catégorielles) + ANOVA (numériques)</li>
+                    <li>Identification des facteurs cliniques clés</li>
+                    <li>Visualisations statistiques approfondies</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h5>Split & Sélection de variables</h5>
+                <ul>
+                    <li>Split stratifié 80/20 → 932 test (730 vivants, 202 décédés)</li>
+                    <li>Test indépendant : 384 patients (278 vivants, 106 décédés)</li>
+                    <li>Modèle complet : 12 variables vs sélection : 8 variables</li>
+                    <li>Standardisation des variables numériques</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h5>Rééquilibrage — SMOTE</h5>
+                <ul>
+                    <li>Déséquilibre initial : 78,3% / 21,7%</li>
+                    <li>SMOTE → 2 916 observations par classe</li>
+                    <li>Rappel pour classe minoritaire : 27% → 89%</li>
+                    <li>Essentiel pour la détection des cas critiques</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h5>Modélisation (3 algorithmes)</h5>
+                <ul>
+                    <li><strong>Régression logistique</strong> — baseline robuste</li>
+                    <li><strong>Naive Bayes</strong> — rapide, interprétable</li>
+                    <li><strong>XGBoost</strong> — meilleur modèle</li>
+                    <li>Tests : avec/sans SMOTE × avec/sans sélection</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h5>Validation indépendante</h5>
+                <ul>
+                    <li>Test sur jeu de données totalement indédit (384 patients)</li>
+                    <li>AUC : 0,8046 sur données inédites</li>
+                    <li>Rappel décédés : <strong>83%</strong> sur le test final</li>
+                    <li>Précision survivants : <strong>91%</strong> — peu de fausses alarmes</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ═══════════════════════ PIPELINE ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-cogs"></i> Pipeline de modélisation</div>
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-database"></i></div>
+                    <h6>Données T1</h6>
+                    <p>3 716 patients · 12 variables cliniques</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-cut"></i></div>
+                    <h6>Split 80/20</h6>
+                    <p>Stratifié sur la variable cible</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-balance-scale"></i></div>
+                    <h6>SMOTE</h6>
+                    <p>2 916 obs./classe après rééquilibrage</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                    <h6>XGBoost</h6>
+                    <p>AUC 0,947 · Recall 0,89</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                    <h6>Validation</h6>
+                    <p>AUC 0,805 · Rappel 83% (test)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ SMOTE IMPACT ═══════════════════════ -->
+<div class="container my-5">
+    <div class="section-title"><i class="fas fa-balance-scale"></i> Impact du SMOTE — avant / après</div>
+    <div class="row g-4 align-items-center">
+        <div class="col-md-4">
+            <div class="smote-card smote-before">
+                <h5 style="color:#c53030;">❌ Sans SMOTE</h5>
+                <div class="smote-val">27%</div>
+                <div style="font-size:0.8rem; color:#c53030; margin-bottom:12px;">Rappel — patients décédés</div>
+                <p style="font-size:0.82rem; color:#555;">Le modèle ignore la classe minoritaire. Il prédit majoritairement "survivant" pour maximiser l'accuracy globale (80%).</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="smote-card smote-after">
+                <h5 style="color:#276749;">✅ Avec SMOTE</h5>
+                <div class="smote-val">89%</div>
+                <div style="font-size:0.8rem; color:#276749; margin-bottom:12px;">Rappel — patients décédés</div>
+                <p style="font-size:0.82rem; color:#555;">Le modèle détecte 89% des patients à haut risque. Dans un contexte médical, rater un patient critique est inacceptable.</p>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex flex-column gap-3">
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.88rem;"><i class="fas fa-lightbulb me-2"></i>Pourquoi le SMOTE est crucial ici</strong>
+                <p style="font-size:0.83rem; margin-top:8px; margin-bottom:0;">En médecine, un <strong>faux négatif</strong> (ne pas détecter un patient qui va décéder) est bien plus grave qu'un faux positif. Le SMOTE rééquilibre le signal pour que le modèle priorise la détection des cas critiques.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ RÉSULTATS ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-trophy"></i> Comparaison des modèles</div>
+        <div class="row g-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header-custom">Performances sur le jeu de test interne (932 patients)</div>
+                    <div class="card-body p-0">
+                        <table class="table results-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Modèle</th>
+                                    <th class="text-center">AUC</th>
+                                    <th class="text-center">Accuracy</th>
+                                    <th class="text-center">Recall décédés</th>
+                                    <th class="text-center">F1 décédés</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Régression Logistique</td>
+                                    <td class="text-center">0,796</td>
+                                    <td class="text-center">80%</td>
+                                    <td class="text-center text-danger">0,27</td>
+                                    <td class="text-center">0,38</td>
+                                </tr>
+                                <tr>
+                                    <td>Régression Logistique + SMOTE</td>
+                                    <td class="text-center">0,799</td>
+                                    <td class="text-center">71%</td>
+                                    <td class="text-center">0,72</td>
+                                    <td class="text-center">0,52</td>
+                                </tr>
+                                <tr>
+                                    <td>Naive Bayes + SMOTE</td>
+                                    <td class="text-center">0,754</td>
+                                    <td class="text-center">69%</td>
+                                    <td class="text-center">0,77</td>
+                                    <td class="text-center">0,72</td>
+                                </tr>
+                                <tr>
+                                    <td>XGBoost (sans SMOTE)</td>
+                                    <td class="text-center">0,766</td>
+                                    <td class="text-center">80%</td>
+                                    <td class="text-center text-danger">0,37</td>
+                                    <td class="text-center">0,44</td>
+                                </tr>
+                                <tr class="best-row">
+                                    <td>XGBoost + SMOTE <span class="badge-best">Meilleur modèle</span></td>
+                                    <td class="text-center">0,947</td>
+                                    <td class="text-center">87%</td>
+                                    <td class="text-center text-success fw-bold">0,89</td>
+                                    <td class="text-center fw-bold">0,87</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-header-custom" style="border-radius:0; border-top:1px solid rgba(255,255,255,0.15);">Validation sur jeu indépendant (384 patients)</div>
+                    <div class="card-body p-0">
+                        <table class="table results-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Modèle final</th>
+                                    <th class="text-center">AUC</th>
+                                    <th class="text-center">Accuracy</th>
+                                    <th class="text-center">Recall décédés</th>
+                                    <th class="text-center">Précision survivants</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="best-row">
+                                    <td>XGBoost + SMOTE <span class="badge-best">Validé</span></td>
+                                    <td class="text-center">0,805</td>
+                                    <td class="text-center">68%</td>
+                                    <td class="text-center text-success fw-bold">0,83</td>
+                                    <td class="text-center fw-bold">0,91</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 d-flex flex-column gap-3">
+                <div class="finding-box">
+                    <strong style="color:#0F056B; font-size:0.88rem;"><i class="fas fa-star me-2"></i>Pourquoi XGBoost + SMOTE ?</strong>
+                    <p style="font-size:0.83rem; margin-top:8px; margin-bottom:0;">Meilleur compromis précision / rappel. AUC de <strong>0,947</strong> sur le train et <strong>0,805</strong> sur les données inédites — confirme la robustesse du modèle et l'absence d'overfitting sévère.</p>
+                </div>
+                <div class="finding-box">
+                    <strong style="color:#0F056B; font-size:0.88rem;"><i class="fas fa-times-circle me-2"></i>Sélection de variables</strong>
+                    <p style="font-size:0.83rem; margin-top:8px; margin-bottom:0;">Réduire de 12 à 8 variables <strong>dégrade légèrement les performances</strong>. Les 12 variables initiales contiennent toutes de l'information non redondante utile.</p>
+                </div>
+                <div class="finding-box">
+                    <strong style="color:#0F056B; font-size:0.88rem;"><i class="fas fa-heartbeat me-2"></i>Impact clinique</strong>
+                    <p style="font-size:0.83rem; margin-top:8px; margin-bottom:0;"><strong>83% des patients</strong> qui vont décéder dans les 12 mois sont correctement identifiés. La précision de 91% sur les survivants minimise les fausses alarmes pour les soignants.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ VIDÉO ═══════════════════════ -->
+<div class="container my-5">
+    <h2 class="text-center mb-4" style="color:#0F056B; font-weight:700;"><i class="fas fa-play-circle me-2"></i>Vidéo de Démonstration</h2>
     <div class="video-container">
-        <iframe 
+        <iframe
           src="https://www.youtube-nocookie.com/embed/o62E-UR1EjQ?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
-          title="YouTube video player"
+          title="Prédiction Survie SLA — Maladie de Charcot"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
     </div>
-
-    <p class="text-center mt-3">
-        Découvrez le projet complet sur 
-        <a href="https://github.com/Saikou-BAH/SLA_ANALYSIS" target="_blank">
-            GitHub
-        </a> et explorez en détail la méthodologie et les résultats obtenus.
-    </p>
-    <p class="text-center mt-2">
+    <p class="text-center mt-3" style="font-size:0.9rem;">
         Problème de lecture ?
-        <a href="https://youtu.be/o62E-UR1EjQ" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
+        <a href="https://youtu.be/o62E-UR1EjQ" target="_blank" rel="noopener" style="color:#0F056B; font-weight:600;">Ouvrir sur YouTube</a>
     </p>
 </div>
 
-<div class="text-center my-5">
-    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<div class="container my-5 text-center">
+    <a href="https://github.com/Saikou-BAH/SLA_ANALYSIS" target="_blank" class="btn btn-main me-3">
+        <i class="fab fa-github me-2"></i>Voir sur GitHub
+    </a>
+    <a href="index.html" class="btn btn-outline-main">
+        <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+    </a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

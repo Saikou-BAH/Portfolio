@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rossmann Store Sales - Modélisation Économétrique</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #F4F2FF;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #0F056B 0%, #2d1b8e 60%, #4a2fa8 100%);
+            color: white;
+            padding: 60px 20px 50px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 12px; }
+        .header .context {
+            font-size: 0.9rem;
+            opacity: 0.75;
+            margin-bottom: 14px;
+            letter-spacing: 0.04em;
+        }
+        .header p.subtitle {
+            font-size: 1.05rem;
+            opacity: 0.88;
+            max-width: 780px;
+            margin: 0 auto 25px;
+            line-height: 1.7;
+        }
+        .tech-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin: 4px;
+        }
+
+        /* ── STATS BANNER ── */
+        .stats-banner {
+            background: #0F056B;
+            color: white;
+            padding: 28px 0;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px 20px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #a78bfa;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.82;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0F056B;
+            margin-bottom: 8px;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #0F056B, #7c3aed);
+            margin-top: 8px;
+            border-radius: 2px;
+        }
+        .section-title.text-center::after { margin: 8px auto 0; }
+
+        /* ── PIPELINE ── */
+        .pipeline-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 28px;
+        }
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 16px;
+            width: 155px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(15,5,107,0.10);
+            border-top: 4px solid #0F056B;
+            transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-4px); }
+        .step-number {
+            width: 34px; height: 34px;
+            background: #0F056B;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .step-card h6 { font-weight: 600; font-size: 0.82rem; color: #0F056B; margin-bottom: 5px; }
+        .step-card p { font-size: 0.72rem; color: #666; margin: 0; }
+
+        /* ── FINDING BOXES ── */
+        .finding-box {
+            background: white;
+            border-left: 5px solid #0F056B;
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(15,5,107,0.07);
+        }
+        .finding-box.warning { border-left-color: #f59e0b; }
+        .finding-box.success { border-left-color: #10b981; }
+        .finding-box .finding-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #0F056B;
+            margin-bottom: 5px;
+        }
+        .finding-box.warning .finding-label { color: #d97706; }
+        .finding-box.success .finding-label { color: #059669; }
+        .finding-box p { margin: 0; font-size: 0.9rem; color: #444; }
+
+        /* ── TABLES ── */
+        .result-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.09);
+            font-size: 0.87rem;
+        }
+        .result-table thead {
+            background: #0F056B;
+            color: white;
+        }
+        .result-table thead th { padding: 12px 16px; font-weight: 600; font-size: 0.8rem; letter-spacing: 0.04em; }
+        .result-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f0edff; }
+        .result-table tbody tr:last-child td { border-bottom: none; }
+        .result-table tbody tr:hover { background: #f8f6ff; }
+        .row-best td { background: #f0fdf4 !important; font-weight: 600; color: #065f46; }
+        .row-warn td { background: #fffbeb !important; }
+
+        /* ── COEF BLOCK ── */
+        .coef-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px 20px;
+            box-shadow: 0 4px 14px rgba(15,5,107,0.09);
+            height: 100%;
+            border-top: 4px solid #0F056B;
+        }
+        .coef-card.negative { border-top-color: #ef4444; }
+        .coef-card.neutral { border-top-color: #6366f1; }
+        .coef-value {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #0F056B;
+            line-height: 1;
+        }
+        .coef-card.negative .coef-value { color: #ef4444; }
+        .coef-var { font-size: 0.78rem; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin: 6px 0 8px; }
+        .coef-desc { font-size: 0.82rem; color: #555; }
+
+        /* ── DIAGNOSTIC TABLE ── */
+        .diag-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.09);
+            font-size: 0.85rem;
+        }
+        .diag-table thead { background: #1e1b4b; color: white; }
+        .diag-table thead th { padding: 12px 14px; font-weight: 600; font-size: 0.78rem; }
+        .diag-table tbody td { padding: 10px 14px; border-bottom: 1px solid #f0edff; }
+        .diag-table tbody tr:last-child td { border-bottom: none; }
+        .badge-ok { background: #d1fae5; color: #065f46; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .badge-fix { background: #fef3c7; color: #92400e; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+
+        /* ── VIDEO ── */
+        .video-container {
+            position: relative;
+            padding-bottom: 40.66%;
+            height: 0;
+            overflow: hidden;
+            max-width: 75%;
+            margin: auto;
+            background: #000;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* ── BUTTONS ── */
+        .btn-primary-custom {
+            background: #0F056B;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary-custom:hover { background: #2d1b8e; color: white; transform: translateY(-2px); }
+        .btn-outline-custom {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .btn-outline-custom:hover { background: rgba(255,255,255,0.15); color: white; transform: translateY(-2px); }
+
+        .section-bg {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(15,5,107,0.07);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+    <div class="context">M2 TIDE · Paris 1 Panthéon-Sorbonne · 2025/2026</div>
+    <h1>Modélisation Économétrique des Ventes Rossmann</h1>
+    <p class="subtitle">
+        Régression linéaire multiple (MCO) pour expliquer et prédire les ventes journalières
+        de la chaîne de droguerie Rossmann — avec correction HC3 et diagnostic complet.
+    </p>
+    <div>
+        <span class="tech-badge"><i class="fas fa-square-root-alt me-1"></i>MCO / OLS</span>
+        <span class="tech-badge"><i class="fas fa-shield-alt me-1"></i>HC3 Robust SE</span>
+        <span class="tech-badge"><i class="fas fa-chart-line me-1"></i>Statsmodels</span>
+        <span class="tech-badge"><i class="fab fa-python me-1"></i>Python 3.12</span>
+        <span class="tech-badge"><i class="fas fa-flask me-1"></i>Économétrie Linéaire</span>
+        <span class="tech-badge"><i class="fas fa-store me-1"></i>Retail Analytics</span>
+    </div>
+</header>
+
+<!-- ── STATS BANNER ── -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">844 k</div>
+                    <div class="stat-label">Observations (jours-magasins)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">R² 0.836</div>
+                    <div class="stat-label">Performance sur jeu de test</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">1 314 €</div>
+                    <div class="stat-label">RMSE (erreur type)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">94.7%</div>
+                    <div class="stat-label">Couverture intervalle 95%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── CONTEXTE ── -->
+<div class="container my-5">
+    <div class="row align-items-start g-5">
+        <div class="col-md-7">
+            <h2 class="section-title">Contexte du Projet</h2>
+            <p class="text-muted mb-4">
+                Ce projet de cours d'économétrie linéaire porte sur les données réelles de <strong>Rossmann</strong>,
+                l'une des plus grandes chaînes de droguerie d'Europe. L'objectif est de construire un modèle
+                économétrique rigoureux pour <strong>expliquer les déterminants des ventes journalières</strong>
+                et évaluer la capacité de généralisation hors échantillon.
+            </p>
+            <div class="finding-box">
+                <div class="finding-label">Modèle retenu</div>
+                <p>Régression linéaire multiple estimée par <strong>MCO (Moindres Carrés Ordinaires)</strong> sur ln(Sales), avec correction des erreurs standards par la méthode robuste <strong>HC3</strong> pour traiter l'hétéroscédasticité.</p>
+            </div>
+            <div class="finding-box success">
+                <div class="finding-label">Résultat clé</div>
+                <p>Écart R² train/test de seulement <strong>1,72 points</strong> (0,8537 → 0,8364) : absence de sur-ajustement malgré 844 338 observations. Erreur médiane = <strong>237 €</strong> sur des ventes moyennes de 6 956 €.</p>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="section-bg">
+                <h6 class="text-muted mb-3" style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em;">Statistiques — Variable cible (Sales)</h6>
+                <table class="result-table w-100">
+                    <thead>
+                        <tr><th>Statistique</th><th>Sales (€)</th><th>Sales_log</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Moyenne</td><td>6 955,96</td><td>8,758</td></tr>
+                        <tr><td>Écart-type</td><td>3 103,82</td><td>0,425</td></tr>
+                        <tr><td>Médiane</td><td>6 369</td><td>8,759</td></tr>
+                        <tr><td>Skewness</td><td>1,595</td><td>−0,110</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.78rem; color:#888; margin-top:10px;">Transformation log motivée par la forte asymétrie droite (skewness 1,595 → −0,110 après transformation).</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── DONNÉES ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Données & Découpage Train / Test</h2>
+        <div class="row g-4 align-items-center">
+            <div class="col-md-7">
+                <table class="result-table w-100">
+                    <thead>
+                        <tr><th>Ensemble</th><th>Observations</th><th>Période</th><th>Proportion</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-best"><td>Train</td><td>674 844</td><td>01/01/2013 → 29/01/2015</td><td>79,9 %</td></tr>
+                        <tr><td>Test</td><td>169 494</td><td>30/01/2015 → 31/07/2015</td><td>20,1 %</td></tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.82rem; color:#666; margin-top:10px;">
+                    Découpage <strong>temporel</strong> (pas aléatoire) pour respecter la nature chronologique des données et évaluer la vraie capacité prédictive du modèle sur des données futures.
+                </p>
+            </div>
+            <div class="col-md-5">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="finding-box" style="margin:0; text-align:center;">
+                            <div class="finding-label">Observations initiales</div>
+                            <p><strong style="font-size:1.3rem; color:#0F056B;">844 338</strong><br><small>jours × magasins</small></p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="finding-box" style="margin:0; text-align:center;">
+                            <div class="finding-label">Variables sélectionnées</div>
+                            <p><strong style="font-size:1.3rem; color:#0F056B;">11 / 18</strong><br><small>par analyse bivariée + stepwise</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PIPELINE ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center">Pipeline d'Analyse (6 Notebooks)</h2>
+        <div class="pipeline-steps">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h6>Présentation</h6>
+                <p>Chargement, filtrage (Open=1, Sales>0), description des 18 variables</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h6>Analyse Univariée</h6>
+                <p>Distribution, asymétries, transformation log pour Sales et Customers</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h6>Analyse Bivariée</h6>
+                <p>Corrélations, tests non-paramétriques, dépendances inter-variables</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">05</div>
+                <h6>Modélisation MCO</h6>
+                <p>Sélection des 11 variables, estimation OLS, interprétation des coefficients</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">06</div>
+                <h6>Diagnostic</h6>
+                <p>Breusch-Pagan, Durbin-Watson, VIF, Cook, correction HC3</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">07</div>
+                <h6>Prédiction</h6>
+                <p>Évaluation hors-échantillon : R², RMSE, MAE, MAPE, intervalle 95%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── INSIGHTS BIVARIÉS ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Principaux Résultats Bivariés</h2>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="finding-box">
+                <div class="finding-label">Déterminant principal</div>
+                <p>La fréquentation client est le premier moteur des ventes : <strong>corrélation de Spearman ρ = 0,8318</strong> (p ≈ 0). Une hausse de 1 % du nombre de clients → +0,82 % de ventes.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="finding-box">
+                <div class="finding-label">Effet des promotions</div>
+                <p>Cliff's delta = <strong>−0,488</strong> (large). Jours avec promo : <strong>8 229 €</strong> de ventes moyennes (+844 clients, panier +10,18 €) contre 5 930 € sans promo (+697 clients, panier 8,94 €).</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="finding-box">
+                <div class="finding-label">Saisonnalité mensuelle</div>
+                <p>Creux en <strong>septembre</strong> (moyenne 6 547 €) et pic en <strong>décembre</strong> (8 609 €). La saisonnalité de fin d'année est nettement marquée dans les données.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="finding-box">
+                <div class="finding-label">Type de magasin</div>
+                <p>Le type <strong>b</strong> génère les ventes brutes les plus élevées (~10 233 €/jour, ~2 022 clients) mais le panier moyen le plus faible (~5,13 €). V de Cramér StoreType × Assortment = <strong>0,54</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── COEFFICIENTS ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Coefficients Principaux du Modèle MCO</h2>
+        <p class="text-center text-muted mb-4" style="font-size:0.88rem;">Modèle : ln(Sales) = β₀ + β₁·ln(Customers) + Σ βⱼ·Xⱼ + ε — R² global = 0,8510 · F = 413 028</p>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="coef-card">
+                    <div class="coef-value">+0.9147</div>
+                    <div class="coef-var">Customers_log</div>
+                    <div class="coef-desc">Élasticité : +1 % de clients → <strong>+0,91 % de ventes</strong></div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="coef-card">
+                    <div class="coef-value">+0.2131</div>
+                    <div class="coef-var">StoreType_d</div>
+                    <div class="coef-desc">Type d vs type a (réf.) : <strong>+23,7 %</strong> de ventes à clients égaux</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="coef-card">
+                    <div class="coef-value">+0.1585</div>
+                    <div class="coef-var">Promo</div>
+                    <div class="coef-desc">Promotion active : <strong>+17,2 %</strong> de ventes à clients égaux</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="coef-card negative">
+                    <div class="coef-value">−0.4430</div>
+                    <div class="coef-var">StoreType_b</div>
+                    <div class="coef-desc">Type b : <strong>−35,8 %</strong> vs type a à clients égaux (panier faible ~5,13 €)</div>
+                </div>
+            </div>
+        </div>
+        <div class="finding-box" style="margin:0;">
+            <div class="finding-label">Lecture du coefficient négatif de StoreType_b</div>
+            <p>Le type b affiche les ventes brutes les plus élevées grâce à sa très forte fréquentation (~2 022 clients/jour), mais une fois le nombre de clients contrôlé, son panier moyen plus faible (~5,13 €) explique l'effet négatif du coefficient. Ce résultat n'est pas contradictoire avec l'analyse bivariée.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ── DIAGNOSTIC ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Diagnostic du Modèle</h2>
+    <div class="table-responsive">
+        <table class="diag-table w-100">
+            <thead>
+                <tr>
+                    <th>Hypothèse</th>
+                    <th>Test</th>
+                    <th>Résultat</th>
+                    <th>Conséquence</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Significativité globale</strong></td>
+                    <td>Fisher</td>
+                    <td>F = 413 028, p ≈ 0</td>
+                    <td><span class="badge-ok">Modèle significatif</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Linéarité</strong></td>
+                    <td>Graphique résidus</td>
+                    <td>Pas de courbure détectée</td>
+                    <td><span class="badge-ok">Spécification adéquate</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Homoscédasticité</strong></td>
+                    <td>Breusch-Pagan</td>
+                    <td>Rejet — LM = 18 065, p ≈ 0</td>
+                    <td><span class="badge-fix">Corrigée par HC3</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Normalité des résidus</strong></td>
+                    <td>Jarque-Bera</td>
+                    <td>Rejet — JB = 2 781, p ≈ 0 <br><small>(skewness = −0,037, kurtosis = 3,27)</small></td>
+                    <td><span class="badge-ok">Négligeable (TCL, n=844k)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Indépendance des erreurs</strong></td>
+                    <td>Durbin-Watson</td>
+                    <td>DW = 1,80</td>
+                    <td><span class="badge-ok">Pas d'autocorrélation</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Multicolinéarité</strong></td>
+                    <td>VIF</td>
+                    <td>Tous VIF &lt; 1,4</td>
+                    <td><span class="badge-ok">Aucun problème</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Observations influentes</strong></td>
+                    <td>Cook + leviers</td>
+                    <td>&lt; 1 % des observations</td>
+                    <td><span class="badge-ok">Impact limité</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ── PERFORMANCES PRÉDICTIVES ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Performances Prédictives (Jeu de Test)</h2>
+        <div class="row g-4 align-items-start">
+            <div class="col-md-6">
+                <table class="result-table w-100">
+                    <thead>
+                        <tr><th>Métrique</th><th>Valeur</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>R² Train</td><td><strong>0,8537</strong></td></tr>
+                        <tr class="row-best"><td>R² Test</td><td><strong>0,8364</strong></td></tr>
+                        <tr><td>Écart Train / Test</td><td>1,72 pp</td></tr>
+                        <tr><td>RMSE</td><td>1 314 €</td></tr>
+                        <tr><td>MAE</td><td>944 €</td></tr>
+                        <tr><td>MAPE</td><td>12,98 %</td></tr>
+                        <tr class="row-best"><td>Erreur médiane</td><td>237 €</td></tr>
+                        <tr><td>Couverture IP 95 %</td><td>94,7 %</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box success">
+                    <div class="finding-label">Absence de sur-ajustement</div>
+                    <p>L'écart de <strong>1,72 pp</strong> entre R²_train et R²_test confirme une excellente généralisation. Le modèle MCO se comporte aussi bien sur des données futures (30/01 → 31/07/2015) que sur les données d'entraînement.</p>
+                </div>
+                <div class="finding-box">
+                    <div class="finding-label">Distribution des erreurs</div>
+                    <p>L'erreur médiane (237 €) est nettement inférieure à la MAE (944 €) : quelques prédictions très éloignées tirent la moyenne vers le haut. <strong>62,2 %</strong> des observations ont une erreur absolue inférieure à la MAE.</p>
+                </div>
+                <div class="finding-box warning">
+                    <div class="finding-label">Limite principale</div>
+                    <p>Le modèle tend à <strong>sous-estimer les ventes élevées</strong> (prédites : 6 778 € vs observées : 7 124 € sur le test, soit −4,9 %). Des facteurs non observés (météo, événements locaux) jouent un rôle dans les cas extrêmes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── LIMITES ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Limites & Perspectives</h2>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="finding-box warning">
+                <div class="finding-label">Limite opérationnelle</div>
+                <p>La variable <code>Customers</code> (nombre de clients journaliers) n'est pas connue à l'avance dans un contexte de prévision réelle. Le modèle a donc surtout un <strong>intérêt explicatif</strong>. Pour une prévision opérationnelle, il faudrait modéliser la fréquentation en amont ou construire un modèle sans cette variable.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="finding-box warning">
+                <div class="finding-label">Variance non expliquée</div>
+                <p><strong>14,9 %</strong> de la variance reste non expliquée. Des facteurs non observés — météo, événements commerciaux exceptionnels, localisation urbaine/rurale — pourraient améliorer le R² et réduire la sous-estimation des ventes élevées.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── VIDÉO ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Démonstration</h2>
+    <div class="video-container">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/VIDEO_ID_A_REMPLACER?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
+          title="Rossmann Store Sales - Modélisation Économétrique"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+    </div>
+    <p class="text-center mt-3 text-muted" style="font-size:0.85rem;">
+        Problème de lecture ?
+        <a href="#" target="_blank" rel="noopener" style="color:#0F056B;">Ouvrir sur YouTube</a>
+    </p>
+</div>
+
+<!-- ── CTA ── -->
+<div class="container my-5">
+    <div style="background: linear-gradient(135deg, #0F056B, #2d1b8e); border-radius: 16px; padding: 50px 40px; text-align: center;">
+        <h3 style="color:white; font-weight:700; margin-bottom:12px;">Explorer le Projet</h3>
+        <p style="color:rgba(255,255,255,0.8); margin-bottom:28px;">Retrouvez les notebooks, les données et la documentation complète sur GitHub.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="https://github.com/Saikou-BAH/rossmann-store-sales/tree/main" target="_blank" class="btn-primary-custom">
+                <i class="fab fa-github me-2"></i>Voir sur GitHub
+            </a>
+            <a href="index.html" class="btn-outline-custom">
+                <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

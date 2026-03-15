@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès à l'Énergie Mondiale</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #F4F2FF;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, #0F056B 0%, #2a1a9e 60%, #4a2fbd 100%);
+            color: white;
+            padding: 60px 20px 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .header p {
+            font-size: 1rem;
+            opacity: 0.88;
+            max-width: 780px;
+            margin: 0 auto 20px;
+            font-weight: 300;
+        }
+        .badge-univ {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            margin: 4px;
+        }
+
+        /* ── Stats banner ── */
+        .stats-banner {
+            background: #0F056B;
+            padding: 30px 0;
+        }
+        .stat-item {
+            text-align: center;
+            color: white;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 20px;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        /* ── Cards & sections ── */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0F056B;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #0F056B22, transparent);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 16px rgba(15, 5, 107, 0.10);
+            border-radius: 12px;
+            height: 100%;
+        }
+        .card-header-custom {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 14px 20px;
+            font-weight: 600;
+        }
+
+        /* ── Cluster cards ── */
+        .cluster-card {
+            border-left: 5px solid;
+            border-radius: 10px;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            height: 100%;
+            transition: transform 0.2s;
+        }
+        .cluster-card:hover { transform: translateY(-3px); }
+        .cluster-0 { border-color: #e74c3c; }
+        .cluster-1 { border-color: #2ecc71; }
+        .cluster-2 { border-color: #3498db; }
+        .cluster-3 { border-color: #f39c12; }
+        .cluster-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .bg-cluster-0 { background: #e74c3c; }
+        .bg-cluster-1 { background: #2ecc71; }
+        .bg-cluster-2 { background: #3498db; }
+        .bg-cluster-3 { background: #f39c12; }
+        .cluster-card h5 { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; }
+        .cluster-card p { font-size: 0.85rem; color: #555; margin: 0; }
+
+        /* ── Access category pills ── */
+        .access-pill {
+            display: inline-block;
+            padding: 5px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+        .pill-universal { background: #d5f5e3; color: #1a8a45; }
+        .pill-high      { background: #fef9e7; color: #b7770d; }
+        .pill-verylow   { background: #fde8e8; color: #c0392b; }
+
+        /* ── Results table ── */
+        .results-table th {
+            background: #0F056B;
+            color: white;
+            font-weight: 500;
+            font-size: 0.88rem;
+        }
+        .results-table td { font-size: 0.88rem; vertical-align: middle; }
+        .results-table tr.best-model { background: #eef0ff; font-weight: 600; }
+        .badge-best {
+            background: #0F056B;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 50px;
+            margin-left: 6px;
+        }
+
+        /* ── Pipeline steps ── */
+        .pipeline-step {
+            background: white;
+            border-radius: 10px;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+            height: 100%;
+        }
+        .pipeline-step .step-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: white;
+            font-size: 1.1rem;
+        }
+        .pipeline-step h6 { font-weight: 700; font-size: 0.88rem; color: #0F056B; }
+        .pipeline-step p { font-size: 0.78rem; color: #666; margin: 0; }
+        .pipeline-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0F056B;
+            font-size: 1.4rem;
+            opacity: 0.5;
+        }
+
+        /* ── Video ── */
+        .video-container {
+            position: relative;
+            padding-bottom: 40%;
+            height: 0;
+            overflow: hidden;
+            max-width: 70%;
+            margin: auto;
+            background: #000;
+            border-radius: 12px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* ── Buttons ── */
+        .btn-main {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .btn-main:hover { opacity: 0.88; color: white; }
+        .btn-outline-main {
+            border: 2px solid #0F056B;
+            color: #0F056B;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-weight: 600;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .btn-outline-main:hover { background: #0F056B; color: white; }
+
+        /* ── Key finding box ── */
+        .finding-box {
+            background: linear-gradient(135deg, #eef0ff, #f8f7ff);
+            border-left: 4px solid #0F056B;
+            border-radius: 0 10px 10px 0;
+            padding: 18px 22px;
+        }
+
+        /* ── Variable tags ── */
+        .var-tag {
+            display: inline-block;
+            background: #eef0ff;
+            color: #0F056B;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 0.78rem;
+            margin: 3px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header class="header">
+    <div class="container">
+        <span class="badge-univ"><i class="fas fa-university me-1"></i>M2 TIDE — Paris 1 Panthéon-Sorbonne &nbsp;·&nbsp; 2025/2026</span>
+        <h1 class="mt-3">🌍 Analyse de l'Accès à l'Énergie à l'Échelle Mondiale</h1>
+        <p>Classification des pays selon leur niveau d'accès à l'énergie, combinant <strong>Spectral Clustering non-supervisé</strong> et <strong>modèles de boosting supervisés</strong> sur des indicateurs énergétiques, économiques et géographiques.</p>
+        <div class="mt-3">
+            <span class="badge-univ"><i class="fab fa-python me-1"></i>Python</span>
+            <span class="badge-univ"><i class="fas fa-project-diagram me-1"></i>Scikit-learn</span>
+            <span class="badge-univ"><i class="fas fa-bolt me-1"></i>XGBoost</span>
+            <span class="badge-univ"><i class="fas fa-chart-line me-1"></i>ACP</span>
+            <span class="badge-univ"><i class="fas fa-network-wired me-1"></i>Spectral Clustering</span>
+        </div>
+    </div>
+</header>
+
+<!-- ═══════════════════════ STATS BANNER ═══════════════════════ -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">151</span>
+                    <div class="stat-label">Pays analysés</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">906</span>
+                    <div class="stat-label">Observations (2011–2016)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">87%</span>
+                    <div class="stat-label">Accuracy (AdaBoost)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Modèles de boosting testés</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ CONTEXTE & DONNÉES ═══════════════════════ -->
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Contexte -->
+        <div class="col-md-6">
+            <div class="section-title"><i class="fas fa-info-circle"></i> Contexte</div>
+            <div class="card p-4">
+                <p style="font-size:0.9rem;">L'accès à l'énergie est un enjeu majeur du développement mondial. Ce projet s'appuie sur le dataset <code>global-data-on-sustainable-energy.csv</code> pour identifier des profils énergétiques entre pays et prédire leur catégorie d'accès.</p>
+                <p style="font-size:0.9rem;">L'analyse est restreinte à <strong>2011–2016</strong> pour limiter les valeurs manquantes. Les pays incomplets ont été retirés, ramenant l'analyse à <strong>151 pays</strong>.</p>
+                <div class="mt-3">
+                    <strong style="font-size:0.85rem; color:#0F056B;">Variable cible — <code>access_category</code></strong>
+                    <div class="mt-2">
+                        <span class="access-pill pill-universal me-2">Universal ≥ 95%</span>
+                        <span class="access-pill pill-high me-2">High (intermédiaire)</span>
+                        <span class="access-pill pill-verylow">Very Low &lt; 50%</span>
+                    </div>
+                    <p class="mt-2" style="font-size:0.8rem; color:#666;">Distribution : 358 Universal · 214 High · 334 VeryLow</p>
+                </div>
+            </div>
+        </div>
+        <!-- Variables -->
+        <div class="col-md-6">
+            <div class="section-title"><i class="fas fa-table"></i> Variables retenues</div>
+            <div class="card p-4">
+                <span class="var-tag">⚡ Accès à l'électricité (%)</span>
+                <span class="var-tag">🔥 Combustibles propres cuisine (%)</span>
+                <span class="var-tag">🌱 Énergies renouvelables (%)</span>
+                <span class="var-tag">♻️ Électricité bas carbone (%)</span>
+                <span class="var-tag">🏭 Consommation énergie/habitant</span>
+                <span class="var-tag">📉 Intensité énergétique (MJ/$)</span>
+                <span class="var-tag">💰 PIB par habitant</span>
+                <span class="var-tag">🌐 Distance à l'équateur</span>
+                <hr class="my-3">
+                <p style="font-size:0.83rem; color:#555;"><i class="fas fa-lightbulb text-warning me-1"></i> Le PIB par habitant et la consommation par habitant affichent un coefficient de Spearman de <strong>0,92</strong> avec le score d'accès. La distance à l'équateur est corrélée positivement à <strong>0,61</strong>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ SPECTRAL CLUSTERING ═══════════════════════ -->
+<div class="container my-5">
+    <div class="section-title"><i class="fas fa-project-diagram"></i> Partie 1 — Spectral Clustering (données 2014)</div>
+    <p style="font-size:0.88rem; color:#555; margin-bottom:24px;">Approche non-supervisée par graphe de plus proches voisins (k-NN) pour identifier des profils énergétiques homogènes entre pays. 4 clusters équilibrés obtenus.</p>
+    <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="cluster-card cluster-0">
+                <span class="cluster-badge bg-cluster-0">Cluster 0</span>
+                <h5>Pays en développement</h5>
+                <p>Faible revenu (PIB médian 5 755$), proches de l'équateur, mix énergétique encore largement carboné. Principalement Afrique subsaharienne.</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="cluster-card cluster-1">
+                <span class="cluster-badge bg-cluster-1">Cluster 1</span>
+                <h5>Ressources naturelles locales</h5>
+                <p>Faible PIB mais forte part de renouvelables (<strong>70%</strong>) et d'électricité bas carbone (<strong>70%</strong>). Dépendance aux ressources naturelles locales.</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="cluster-card cluster-2">
+                <span class="cluster-badge bg-cluster-2">Cluster 2</span>
+                <h5>Pays riches énergivores</h5>
+                <p>Consommation par habitant la plus élevée (<strong>79 296 kWh</strong>), PIB médian <strong>53 700$</strong>. Pays occidentaux en transition énergétique.</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="cluster-card cluster-3">
+                <span class="cluster-badge bg-cluster-3">Cluster 3</span>
+                <h5>Pays intermédiaires</h5>
+                <p>Revenu modéré (PIB médian 11 623$), plus éloignés de l'équateur. Profil de transition entre développement et industrialisation avancée.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ ACP ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-compress-arrows-alt"></i> Réduction de dimension — ACP</div>
+        <div class="row g-4 align-items-center">
+            <div class="col-md-7">
+                <p style="font-size:0.9rem;">L'ACP est appliquée sur les 906 observations et 8 variables. Les <strong>3 premières composantes</strong> conservent <strong>88,3%</strong> de la variance totale.</p>
+                <ul style="font-size:0.88rem;">
+                    <li><strong>PC1 (51%)</strong> — oppose pays riches gros consommateurs aux pays à forte part de renouvelables</li>
+                    <li><strong>PC2 (20,9%)</strong> — différences dans le type d'électricité produite (bas carbone vs fossile)</li>
+                    <li><strong>PC3 (16,4%)</strong> — intensité énergétique, écarts d'efficacité entre pays</li>
+                </ul>
+                <p style="font-size:0.85rem; color:#555;">Le biplot PC1–PC2 montre une séparation nette des catégories d'accès, confirmant la pertinence des variables retenues.</p>
+            </div>
+            <div class="col-md-5">
+                <div class="row g-2 text-center">
+                    <div class="col-4">
+                        <div class="card p-3">
+                            <div style="font-size:1.6rem; font-weight:700; color:#0F056B;">51%</div>
+                            <div style="font-size:0.75rem; color:#666;">PC1</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card p-3">
+                            <div style="font-size:1.6rem; font-weight:700; color:#2a1a9e;">20,9%</div>
+                            <div style="font-size:0.75rem; color:#666;">PC2</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card p-3">
+                            <div style="font-size:1.6rem; font-weight:700; color:#4a2fbd;">16,4%</div>
+                            <div style="font-size:0.75rem; color:#666;">PC3</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card p-3" style="background: linear-gradient(135deg,#0F056B,#2a1a9e); color:white;">
+                            <div style="font-size:1.8rem; font-weight:700;">88,3%</div>
+                            <div style="font-size:0.78rem; opacity:0.85;">Variance totale expliquée</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ MODÉLISATION ═══════════════════════ -->
+<div class="container my-5">
+    <div class="section-title"><i class="fas fa-cogs"></i> Partie 2 — Classification supervisée</div>
+
+    <!-- Pipeline -->
+    <div class="row g-2 align-items-center mb-5">
+        <div class="col">
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-database"></i></div>
+                <h6>Données</h6>
+                <p>906 obs · 151 pays · 2011–2016</p>
+            </div>
+        </div>
+        <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="col">
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-cut"></i></div>
+                <h6>Split par pays</h6>
+                <p>GroupShuffleSplit · 120 train / 31 test</p>
+            </div>
+        </div>
+        <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="col">
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-balance-scale"></i></div>
+                <h6>Standardisation</h6>
+                <p>StandardScaler dans un pipeline scikit-learn</p>
+            </div>
+        </div>
+        <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="col">
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-check-double"></i></div>
+                <h6>Validation croisée</h6>
+                <p>GroupKFold · 5 plis · regroupement par pays</p>
+            </div>
+        </div>
+        <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="col">
+            <div class="pipeline-step">
+                <div class="step-icon"><i class="fas fa-bolt"></i></div>
+                <h6>Modèles</h6>
+                <p>AdaBoost · XGBoost · Gradient Boosting</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results table -->
+    <div class="section-title"><i class="fas fa-trophy"></i> Résultats</div>
+    <div class="row g-4">
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header-custom">Performances sur le jeu de test</div>
+                <div class="card-body p-0">
+                    <table class="table results-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Modèle</th>
+                                <th class="text-center">Accuracy</th>
+                                <th class="text-center">F1 — High</th>
+                                <th class="text-center">F1 — Universal</th>
+                                <th class="text-center">F1 — VeryLow</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="best-model">
+                                <td>AdaBoost <span class="badge-best">Meilleur test</span></td>
+                                <td class="text-center">0,87</td>
+                                <td class="text-center">0,72</td>
+                                <td class="text-center">0,90</td>
+                                <td class="text-center">0,92</td>
+                            </tr>
+                            <tr>
+                                <td>XGBoost</td>
+                                <td class="text-center">0,84</td>
+                                <td class="text-center">0,69</td>
+                                <td class="text-center">0,89</td>
+                                <td class="text-center">0,89</td>
+                            </tr>
+                            <tr>
+                                <td>Gradient Boosting</td>
+                                <td class="text-center">0,82</td>
+                                <td class="text-center">0,64</td>
+                                <td class="text-center">0,89</td>
+                                <td class="text-center">0,86</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-header-custom mt-0" style="border-radius: 0 0 12px 12px; border-top: 1px solid rgba(255,255,255,0.15);">Validation croisée — GroupKFold (5 plis)</div>
+                <div class="card-body p-0">
+                    <table class="table results-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Modèle</th>
+                                <th class="text-center">Moyenne</th>
+                                <th class="text-center">Écart-type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>AdaBoost</td>
+                                <td class="text-center">0,790</td>
+                                <td class="text-center">0,071</td>
+                            </tr>
+                            <tr>
+                                <td>XGBoost</td>
+                                <td class="text-center">0,794</td>
+                                <td class="text-center">0,052</td>
+                            </tr>
+                            <tr class="best-model">
+                                <td>Gradient Boosting <span class="badge-best">Meilleur CV</span></td>
+                                <td class="text-center">0,811</td>
+                                <td class="text-center">0,062</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 d-flex flex-column gap-3">
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-lightbulb me-2"></i>Constat clé</strong>
+                <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">AdaBoost domine sur le test (87%) mais Gradient Boosting est plus stable en CV (81,1%). Les trois modèles s'accordent : la classe <span class="access-pill pill-high">High</span> est la plus difficile à prédire car elle correspond à une situation intermédiaire sans signal net.</p>
+            </div>
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-search me-2"></i>Variables importantes</strong>
+                <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">Le <strong>PIB par habitant</strong> et la <strong>consommation d'énergie par habitant</strong> dominent l'importance des variables dans les trois modèles, en cohérence avec l'ACP.</p>
+            </div>
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-exclamation-circle me-2"></i>Erreurs communes</strong>
+                <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">16 observations mal classées par les 3 modèles simultanément. Exemple : le Brésil est prédit <span class="access-pill pill-high">High</span> alors qu'il est <span class="access-pill pill-universal">Universal</span> — son score d'accès est juste au-dessus du seuil de 95%.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ VIDÉO ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4" style="color:#0F056B; font-weight:700;"><i class="fas fa-play-circle me-2"></i>Vidéo de Démonstration</h2>
+        <div class="video-container">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/VIDEO_ID_A_REMPLACER?rel=0&modestbranding=1&controls=1"
+              title="Démonstration — Accès à l'Énergie Mondiale"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+        </div>
+        <p class="text-center mt-4" style="font-size:0.9rem;">
+            Retrouvez le code complet, le notebook et les données sur
+            <a href="https://github.com/Saikou-BAH/SustainableGlobalData" target="_blank" style="color:#0F056B; font-weight:600;">
+                <i class="fab fa-github me-1"></i>GitHub
+            </a>
+        </p>
+    </div>
+</div>
+
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<div class="container my-5 text-center">
+    <a href="https://github.com/Saikou-BAH/SustainableGlobalData" target="_blank" class="btn btn-main me-3">
+        <i class="fab fa-github me-2"></i>Voir sur GitHub
+    </a>
+    <a href="index.html" class="btn btn-outline-main">
+        <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+    </a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -3,147 +3,582 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon CV Power BI - Projet</title>
+    <title>Airport Gas Consumption Forecasting</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #F4F2FF;
             color: #333;
+            font-family: 'Poppins', sans-serif;
         }
+
+        /* ── Header ── */
         .header {
-            background-color: #0F056B;
+            background: linear-gradient(135deg, #0F056B 0%, #2a1a9e 60%, #4a2fbd 100%);
             color: white;
-            padding: 40px 0;
+            padding: 60px 20px 50px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .btn-custom {
-            background-color: #0F056B;
-            border-color: #0F056B;
-            font-size: 18px;
-            border-radius: 8px;
+        .header::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%);
+            pointer-events: none;
         }
-        .btn-custom:hover {
-            background-color: #0F056B;
+        .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 14px; }
+        .header p  { font-size: 1rem; opacity: 0.88; max-width: 780px; margin: 0 auto 20px; font-weight: 300; }
+        .badge-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 18px;
+            border-radius: 50px; font-size: 0.82rem; margin: 4px;
         }
+
+        /* ── Stats banner ── */
+        .stats-banner { background: #0F056B; padding: 30px 0; }
+        .stat-item {
+            text-align: center; color: white;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 20px;
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; display: block; line-height: 1; }
+        .stat-label  { font-size: 0.78rem; opacity: 0.8; margin-top: 4px; }
+
+        /* ── Sections ── */
+        .section-title {
+            font-size: 1.4rem; font-weight: 700; color: #0F056B;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 2px;
+            background: linear-gradient(to right, #0F056B22, transparent);
+        }
+
+        /* ── Cards ── */
         .card {
             border: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-radius: 12px; height: 100%;
         }
-        .highlight {
-            color: #0F056B;
+        .card-header-custom {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            color: white; border-radius: 12px 12px 0 0 !important;
+            padding: 14px 20px; font-weight: 600;
         }
-        .portfolio-media {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
+
+        /* ── Pipeline ── */
+        .pipeline-step {
+            background: white; border-radius: 10px;
+            padding: 18px 16px; text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07); height: 100%;
+        }
+        .pipeline-step .step-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 12px; color: white; font-size: 1.1rem;
+        }
+        .pipeline-step h6 { font-weight: 700; font-size: 0.88rem; color: #0F056B; }
+        .pipeline-step p  { font-size: 0.78rem; color: #666; margin: 0; }
+        .pipeline-arrow {
+            display: flex; align-items: center; justify-content: center;
+            color: #0F056B; font-size: 1.4rem; opacity: 0.5;
+        }
+
+        /* ── Step cards (numbered) ── */
+        .step-card {
+            background: white; border-radius: 12px; padding: 22px 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08); height: 100%;
+            border-top: 4px solid #0F056B; transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-3px); }
+        .step-number {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem; margin-bottom: 12px;
+        }
+        .step-card h5 { font-weight: 700; font-size: 0.95rem; color: #0F056B; }
+        .step-card ul { font-size: 0.83rem; color: #555; padding-left: 18px; margin: 0; }
+
+        /* ── Model comparison ── */
+        .model-card {
+            background: white; border-radius: 12px; padding: 24px; text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08); height: 100%;
+            position: relative; transition: transform 0.2s;
+        }
+        .model-card:hover { transform: translateY(-3px); }
+        .model-card.best {
+            border: 2px solid #0F056B;
+            background: linear-gradient(to bottom, #eef0ff, white);
+        }
+        .best-badge {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: #0F056B; color: white;
+            padding: 3px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 700;
+            white-space: nowrap;
+        }
+        .metric-big  { font-size: 2rem; font-weight: 700; color: #0F056B; }
+        .metric-label { font-size: 0.75rem; color: #888; }
+        .metric-row  { display: flex; justify-content: space-around; margin-top: 16px; }
+        .metric-item { text-align: center; }
+        .metric-val  { font-size: 1.1rem; font-weight: 700; color: #2a1a9e; }
+
+        /* ── Metric comparison table ── */
+        .results-table th {
+            background: #0F056B; color: white;
+            font-weight: 500; font-size: 0.88rem;
+        }
+        .results-table td { font-size: 0.88rem; vertical-align: middle; }
+        .results-table tr.best-row { background: #eef0ff; font-weight: 600; }
+        .badge-best {
+            background: #0F056B; color: white;
+            font-size: 0.7rem; padding: 2px 8px;
+            border-radius: 50px; margin-left: 6px;
+        }
+
+        /* ── Finding box ── */
+        .finding-box {
+            background: linear-gradient(135deg, #eef0ff, #f8f7ff);
+            border-left: 4px solid #0F056B;
+            border-radius: 0 10px 10px 0;
+            padding: 18px 22px;
+        }
+
+        /* ── Season cards ── */
+        .season-card {
+            border-radius: 10px; padding: 18px; text-align: center;
+            color: white; font-weight: 600;
+        }
+        .season-winter { background: linear-gradient(135deg, #1a3a6b, #2a5eb3); }
+        .season-spring { background: linear-gradient(135deg, #2d7a3a, #4aad5a); }
+        .season-summer { background: linear-gradient(135deg, #b35a00, #e07a00); }
+        .season-autumn { background: linear-gradient(135deg, #6b3a00, #a05a00); }
+        .season-card .season-val  { font-size: 1.5rem; font-weight: 700; }
+        .season-card .season-name { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
+
+        /* ── Test pill ── */
+        .test-pill {
+            display: inline-block;
+            background: #eef0ff; color: #0F056B;
+            border-radius: 6px; padding: 4px 14px;
+            font-size: 0.8rem; font-weight: 600; margin: 4px;
+        }
+
+        /* ── Video ── */
+        .video-container {
+            position: relative; padding-bottom: 40%;
+            height: 0; overflow: hidden;
+            max-width: 70%; margin: auto;
+            background: #000; border-radius: 12px;
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* ── Buttons ── */
+        .btn-main {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border: none; color: white; border-radius: 8px;
+            padding: 10px 28px; font-weight: 600; transition: opacity 0.2s;
+        }
+        .btn-main:hover { opacity: 0.88; color: white; }
+        .btn-outline-main {
+            border: 2px solid #0F056B; color: #0F056B;
+            border-radius: 8px; padding: 10px 28px;
+            font-weight: 600; background: transparent; transition: all 0.2s;
+        }
+        .btn-outline-main:hover { background: #0F056B; color: white; }
+
+        /* ── Var tags ── */
+        .var-tag {
+            display: inline-block; background: #eef0ff; color: #0F056B;
+            border-radius: 6px; padding: 4px 12px;
+            font-size: 0.78rem; margin: 3px; font-weight: 500;
         }
     </style>
 </head>
 <body>
 
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <header class="header">
-    <h1>Prédiction de la Consommation de Gaz dans un Aéroport</h1>
-    <ul style="list-style-type: none; padding-left: 0; font-size: 0.95rem; font-weight: normal;">
-        <li>Imaginez un aéroport fonctionnant 24h/24, où la consommation de gaz fluctue en fonction des saisons, du climat et des activités humaines.</li>
-        <li>Ce projet a pour ambition de prédire ces variations afin d’aider à optimiser l’utilisation des ressources énergétiques.</li>
-        <li>Grâce aux données et à des techniques avancées d’analyse, nous avons conçu un modèle capable d’anticiper la consommation de gaz sur les 3 prochains mois avec une précision remarquable.</li>
-    </ul>
+    <div class="container">
+        <h1>✈️ Airport Gas Consumption Forecasting</h1>
+        <p>Prédiction de la consommation de gaz d'un aéroport sur <strong>3 mois</strong> à partir de séries temporelles horaires, en combinant analyse exploratoire approfondie, décomposition saisonnière et régression ARDL avec variables décalées.</p>
+        <div class="mt-3">
+            <span class="badge-tag"><i class="fab fa-python me-1"></i>Python</span>
+            <span class="badge-tag"><i class="fas fa-chart-area me-1"></i>Séries temporelles</span>
+            <span class="badge-tag"><i class="fas fa-wave-square me-1"></i>ARDL</span>
+            <span class="badge-tag"><i class="fas fa-thermometer-half me-1"></i>Saisonnalité</span>
+            <span class="badge-tag"><i class="fas fa-project-diagram me-1"></i>Statsmodels · OLS</span>
+        </div>
+    </div>
 </header>
 
+<!-- ═══════════════════════ STATS BANNER ═══════════════════════ -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">60 200</span>
+                    <div class="stat-label">Observations horaires</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">0,96</span>
+                    <div class="stat-label">R² — Meilleur modèle (ARDL2)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">4 413</span>
+                    <div class="stat-label">RMSE (kWh) — ARDL2</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <div class="stat-label">Mois de prévision</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ CONTEXTE & DONNÉES ═══════════════════════ -->
 <div class="container my-5">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Objectifs du projet</h2>
-            <ul>
-                <li>Anticiper les besoins énergétiques : éviter le gaspillage et optimiser les coûts.</li>
-                <li>Encourager une gestion plus écologique : ajuster la consommation en fonction des tendances.</li>
-                <li>Offrir un outil d’aide à la décision : permettre aux gestionnaires de l’aéroport d’avoir une vision claire des variations futures.</li>
-            </ul>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="section-title"><i class="fas fa-info-circle"></i> Contexte</div>
+            <div class="card p-4">
+                <p style="font-size:0.9rem;">Un aéroport fonctionne <strong>24h/24</strong>, sa consommation de gaz fluctue selon les saisons, le climat et les activités humaines. Ce projet vise à <strong>anticiper ces variations</strong> sur 3 mois pour optimiser les ressources et réduire les coûts.</p>
+                <p style="font-size:0.9rem; margin-bottom:0;">Le dataset contient <strong>60 200 observations horaires</strong> sur 12 variables. Une seule variable présente des valeurs manquantes (<strong>0,24%</strong> des données), traitées par interpolation linéaire et par splines.</p>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h2>Graphiques</h2>
-            <img src="assets/images/portfolio/gas.png" class="img-fluid rounded shadow" alt="Graphiques consommation gaz">
-        </div>
-        <div class="col-md-4">
-            <h2>Compétences clés</h2>
-            <ul>
-                <li>Analyse des séries temporelles : identification des tendances et saisonnalités.</li>
-                <li>Prétraitement des données : gestion des valeurs manquantes et transformation des variables.</li>
-                <li>Modélisation avancée : régression avec variables décalées (ARDL), évaluation des performances.</li>
-            </ul>
+        <div class="col-md-6">
+            <div class="section-title"><i class="fas fa-database"></i> Variables</div>
+            <div class="card p-4">
+                <span class="var-tag">⚡ usage_kWh (cible)</span>
+                <span class="var-tag">🌡️ Temperature_Celsius</span>
+                <span class="var-tag">☀️ SunlightDurationMinutes</span>
+                <span class="var-tag">✈️ Passengers</span>
+                <span class="var-tag">🛫 Flights</span>
+                <span class="var-tag">📅 lag1_usage_kWh</span>
+                <span class="var-tag">📅 lag1_Temperature</span>
+                <span class="var-tag">📅 lag1_Sunlight</span>
+                <hr class="my-3">
+                <div class="row text-center g-2">
+                    <div class="col-4">
+                        <div style="font-size:1.1rem; font-weight:700; color:#0F056B;">709,46</div>
+                        <div style="font-size:0.72rem; color:#888;">Moyenne (kWh)</div>
+                    </div>
+                    <div class="col-4">
+                        <div style="font-size:1.1rem; font-weight:700; color:#0F056B;">444,50</div>
+                        <div style="font-size:0.72rem; color:#888;">Écart-type</div>
+                    </div>
+                    <div class="col-4">
+                        <div style="font-size:1.1rem; font-weight:700; color:#0F056B;">−0,74</div>
+                        <div style="font-size:0.72rem; color:#888;">Corrélation temp.</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════ SAISONNALITÉ ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-snowflake"></i> Forte saisonnalité détectée</div>
+        <p style="font-size:0.88rem; color:#555; margin-bottom:24px;">La consommation hivernale est <strong>environ 5 fois plus élevée</strong> que la consommation estivale. Une corrélation négative de <strong>−0,74</strong> est observée entre la température et la consommation de gaz.</p>
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="season-card season-winter">
+                    <div class="season-val">× 5</div>
+                    <div class="season-name">❄️ Hiver — pic max</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="season-card season-autumn">
+                    <div class="season-val">× 2,5</div>
+                    <div class="season-name">🍂 Automne — transition</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="season-card season-spring">
+                    <div class="season-val">× 2,5</div>
+                    <div class="season-name">🌸 Printemps — transition</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="season-card season-summer">
+                    <div class="season-val">× 1</div>
+                    <div class="season-name">☀️ Été — consommation min</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ ÉTAPES DU PROJET ═══════════════════════ -->
 <div class="container my-5">
-    <h2 class="text-center">Les Atouts du Projet</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-4">
-            <h4>🔹 Nettoyage et Prétraitement Robuste</h4>
-            <p>🔍 Suppression des variables redondantes, interpolation des valeurs manquantes, et reconstruction des plages horaires absentes.</p>
+    <div class="section-title"><i class="fas fa-list-ol"></i> Démarche du projet</div>
+    <div class="row g-3">
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h5>Exploration & Statistiques</h5>
+                <ul>
+                    <li>Analyse des 12 variables, détection des valeurs manquantes (0,24%)</li>
+                    <li>Suppression des variables redondantes</li>
+                    <li>Moyenne (709,46), écart-type (444,50), skewness (0,21), kurtosis (−0,96)</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h4>📊 Exploration et Visualisation des Données</h4>
-            <p>📈 Graphiques interactifs pour observer les variations saisonnières et les corrélations entre température, ensoleillement et consommation.</p>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h5>Visualisation</h5>
+                <ul>
+                    <li>Corrélation température / ensoleillement / consommation (−0,74)</li>
+                    <li>Cartes thermiques des effets saisonniers</li>
+                    <li>Graphiques interactifs jour / saison / année</li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h4>📈 Analyse et Décomposition des Séries Temporelles</h4>
-            <p>🕰️ Étude approfondie des tendances, stationnarité testée avec ADF, KPSS et Phillips-Perron.</p>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h5>Prétraitement</h5>
+                <ul>
+                    <li>Interpolation linéaire et par splines</li>
+                    <li>Moyennes quotidiennes pour valeurs manquantes</li>
+                    <li>Recréation des plages horaires absentes</li>
+                    <li>Gestion de la lacune de 10 jours</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h5>Analyse des séries temporelles</h5>
+                <ul>
+                    <li>Décomposition : tendance, saisonnalité, résidus</li>
+                    <li>Tests de stationnarité :</li>
+                </ul>
+                <div class="mt-2">
+                    <span class="test-pill">ADF</span>
+                    <span class="test-pill">KPSS</span>
+                    <span class="test-pill">Phillips-Perron</span>
+                </div>
+                <ul class="mt-2"><li>Création des variables décalées (lags)</li></ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h5>Modélisation ARDL (OLS)</h5>
+                <ul>
+                    <li><strong>ARDL1</strong> — Temperature + Sunlight uniquement</li>
+                    <li><strong>ARDL2</strong> — + lag1_usage_kWh (coeff. 0,7077)</li>
+                    <li>SARIMA testé mais résultats insatisfaisants</li>
+                    <li>Métriques : RMSE, MAE, MSE, R², F-stat</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="step-card">
+                <div class="step-number">6</div>
+                <h5>Prévision sur 3 mois</h5>
+                <ul>
+                    <li>Génération d'observations basées sur tendances historiques</li>
+                    <li>Modèle 4 (hors-échantillon) : R² = 0,955, F-stat = 5 316</li>
+                    <li>Visualisation prévisions vs données réelles</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ═══════════════════════ PIPELINE VISUEL ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-cogs"></i> Pipeline de modélisation</div>
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-database"></i></div>
+                    <h6>Données brutes</h6>
+                    <p>60 200 obs. horaires · 12 variables</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-broom"></i></div>
+                    <h6>Nettoyage</h6>
+                    <p>Interpolation splines, reconstruction série</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-wave-square"></i></div>
+                    <h6>Décomposition</h6>
+                    <p>Tendance + saisonnalité + résidus</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-clock"></i></div>
+                    <h6>Feature engineering</h6>
+                    <p>lag1_usage · lag1_temp · lag1_sunlight</p>
+                </div>
+            </div>
+            <div class="col-auto d-none d-md-flex pipeline-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="col">
+                <div class="pipeline-step">
+                    <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+                    <h6>ARDL2 + Prévision</h6>
+                    <p>R² 0,96 · 3 mois</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════ RÉSULTATS ═══════════════════════ -->
 <div class="container my-5">
-    <h2 class="text-center">Modélisation et Évaluation</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <h3 class="text-primary">Modélisation Optimisée</h3>
-            <p>Comparaison de modèles de régression pour une meilleure prédiction, avec une optimisation basée sur des métriques de performance.</p>
+    <div class="section-title"><i class="fas fa-trophy"></i> Résultats & Comparaison des modèles</div>
+    <div class="row g-4">
+
+        <!-- Table -->
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-header-custom">Performances sur le jeu de test (in-sample)</div>
+                <div class="card-body p-0">
+                    <table class="table results-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Modèle</th>
+                                <th class="text-center">R²</th>
+                                <th class="text-center">RMSE</th>
+                                <th class="text-center">MAE</th>
+                                <th class="text-center">F-stat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ARDL1 — sans lag usage</td>
+                                <td class="text-center">0,865</td>
+                                <td class="text-center">7 962</td>
+                                <td class="text-center">6 809</td>
+                                <td class="text-center">—</td>
+                            </tr>
+                            <tr class="best-row">
+                                <td>ARDL2 — avec lag1_usage_kWh <span class="badge-best">Meilleur</span></td>
+                                <td class="text-center">0,959</td>
+                                <td class="text-center">4 413</td>
+                                <td class="text-center">3 107</td>
+                                <td class="text-center">3 813</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-header-custom" style="border-radius:0; border-top:1px solid rgba(255,255,255,0.15);">Performances hors-échantillon (prévision 3 mois)</div>
+                <div class="card-body p-0">
+                    <table class="table results-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Modèle</th>
+                                <th class="text-center">R²</th>
+                                <th class="text-center">R² ajusté</th>
+                                <th class="text-center">F-stat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Modèle 3 — sans lag usage</td>
+                                <td class="text-center">0,900</td>
+                                <td class="text-center">0,900</td>
+                                <td class="text-center">2 819</td>
+                            </tr>
+                            <tr class="best-row">
+                                <td>Modèle 4 — avec lag1_usage_kWh <span class="badge-best">Meilleur</span></td>
+                                <td class="text-center">0,955</td>
+                                <td class="text-center">0,955</td>
+                                <td class="text-center">5 316</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">Prévisions</h3>
-            <p>Génération de prévisions pour les 3 mois suivants, utilisation des tendances historiques pour anticiper la consommation future.</p>
+
+        <!-- Insights -->
+        <div class="col-md-5 d-flex flex-column gap-3">
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-lightbulb me-2"></i>Impact des lags</strong>
+                <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">L'ajout de <code>lag1_usage_kWh</code> (coefficient <strong>0,7077</strong>) a réduit le RMSE de <strong>7 962 → 4 413 kWh</strong>, soit une amélioration de 45%. La consommation passée est le meilleur prédicteur de la consommation future.</p>
+            </div>
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-times-circle me-2"></i>SARIMA écarté</strong>
+                <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">Des modèles SARIMA ont été testés mais ont donné des résultats insatisfaisants. L'approche ARDL avec OLS s'est avérée plus robuste sur ces données horaires à forte saisonnalité.</p>
+            </div>
+            <div class="finding-box">
+                <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-check-circle me-2"></i>Généralisation confirmée</strong>
+                <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">Le modèle 4 maintient un <strong>R² de 0,955</strong> sur les données hors-échantillon, confirmant sa capacité à bien prédire sur les 3 mois de prévision.</p>
+            </div>
         </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">Résultats et Conclusions</h3>
-            <p>Le modèle ARDL2 a fourni les meilleures performances avec RMSE à 4413,32 et un R² à 0,96.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">Les analyses ont montré</h3>
-            <p>Une forte saisonnalité, une corrélation température-gaz négative, et la pertinence des variables décalées.</p>
-        </div>
+
     </div>
 </div>
 
-<div class="container text-center">
-    <h2 class="text-center">🎥 Vidéo de démonstration</h2>
-    <!-- Intégration YouTube -->
-    <div style="position:relative;padding-bottom:40.25%;height:0;overflow:hidden;max-width:70%;margin:auto;border-radius:8px;background:#000;">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/UVlNflpLx5A?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        style="position:absolute;top:0;left:0;width:100%;height:70%;">
-      </iframe>
+<!-- ═══════════════════════ VIDÉO ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4" style="color:#0F056B; font-weight:700;"><i class="fas fa-play-circle me-2"></i>Vidéo de Démonstration</h2>
+        <div class="video-container">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/UVlNflpLx5A?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
+              title="Airport Gas Consumption Forecasting"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+        </div>
+        <p class="text-center mt-3" style="font-size:0.9rem;">
+            Problème de lecture ?
+            <a href="https://youtu.be/UVlNflpLx5A" target="_blank" rel="noopener" style="color:#0F056B; font-weight:600;">Ouvrir sur YouTube</a>
+        </p>
     </div>
-
-    <p class="text-center mt-2">
-        Problème de lecture ?
-        <a href="https://youtu.be/UVlNflpLx5A" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
-    </p>
 </div>
 
-<p class="text-center mt-3">
-    Découvrez le projet en détail sur 
-    <a href="https://github.com/Saikou-BAH/AirportGasForecast/blob/main/Readme.md" target="_blank">
-        GitHub
-    </a> et explorez les analyses et prédictions réalisées.
-</p>
-
-<div class="text-center my-5">
-    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<div class="container my-5 text-center">
+    <a href="https://github.com/Saikou-BAH/AirportGasForecast" target="_blank" class="btn btn-main me-3">
+        <i class="fab fa-github me-2"></i>Voir sur GitHub
+    </a>
+    <a href="index.html" class="btn btn-outline-main">
+        <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+    </a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

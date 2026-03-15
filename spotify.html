@@ -3,173 +3,518 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spotify Analysis - Projet</title>
+    <title>Spotify Data Explorer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #F4F2FF;
             color: #333;
+            font-family: 'Poppins', sans-serif;
         }
+
+        /* ── Header ── */
         .header {
-            background-color: #0F056B;
+            background: linear-gradient(135deg, #0F056B 0%, #2a1a9e 60%, #4a2fbd 100%);
             color: white;
-            padding: 40px 0;
+            padding: 60px 20px 50px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-        .header ul {
-            list-style-type: none;
-            padding-left: 0;
-            font-weight: normal;
-            font-size: 0.95rem;
+        .header::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%);
+            pointer-events: none;
         }
-        .btn-custom {
-            background-color: #0F056B;
-            border-color: #0F056B;
-            font-size: 18px;
-            border-radius: 8px;
+        .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 14px; }
+        .header p  { font-size: 1rem; opacity: 0.88; max-width: 780px; margin: 0 auto 20px; font-weight: 300; }
+        .badge-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 18px;
+            border-radius: 50px; font-size: 0.82rem; margin: 4px;
         }
-        .btn-custom:hover {
-            background-color: #0F056B;
+
+        /* ── Stats banner ── */
+        .stats-banner { background: #0F056B; padding: 30px 0; }
+        .stat-item {
+            text-align: center; color: white;
+            border-right: 1px solid rgba(255,255,255,0.2);
+            padding: 10px 20px;
         }
+        .stat-item:last-child { border-right: none; }
+        .stat-number { font-size: 2.2rem; font-weight: 700; display: block; line-height: 1; }
+        .stat-label  { font-size: 0.78rem; opacity: 0.8; margin-top: 4px; }
+
+        /* ── Section titles ── */
+        .section-title {
+            font-size: 1.4rem; font-weight: 700; color: #0F056B;
+            margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 2px;
+            background: linear-gradient(to right, #0F056B22, transparent);
+        }
+
+        /* ── Cards ── */
         .card {
             border: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-radius: 12px; height: 100%;
         }
+        .card-header-custom {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            color: white; border-radius: 12px 12px 0 0 !important;
+            padding: 14px 20px; font-weight: 600; font-size: 0.95rem;
+        }
+
+        /* ── App cards ── */
+        .app-card {
+            background: white; border-radius: 16px; padding: 28px 24px;
+            box-shadow: 0 4px 20px rgba(15,5,107,0.12); height: 100%;
+            transition: transform 0.2s;
+        }
+        .app-card:hover { transform: translateY(-4px); }
+        .app-icon {
+            width: 56px; height: 56px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.4rem; margin-bottom: 16px;
+        }
+        .app-card h4 { font-weight: 700; font-size: 1rem; color: #0F056B; }
+        .app-card ul { font-size: 0.83rem; color: #555; padding-left: 18px; }
+        .app-badge {
+            display: inline-block;
+            background: #eef0ff; color: #0F056B;
+            border-radius: 50px; padding: 3px 12px;
+            font-size: 0.75rem; font-weight: 600; margin-bottom: 10px;
+        }
+
+        /* ── Finding box ── */
+        .finding-box {
+            background: linear-gradient(135deg, #eef0ff, #f8f7ff);
+            border-left: 4px solid #0F056B;
+            border-radius: 0 10px 10px 0;
+            padding: 18px 22px; height: 100%;
+        }
+
+        /* ── Insight cards ── */
+        .insight-card {
+            background: white; border-radius: 12px; padding: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08); height: 100%;
+            border-top: 4px solid #0F056B; transition: transform 0.2s;
+        }
+        .insight-card:hover { transform: translateY(-3px); }
+        .insight-card .icon { font-size: 1.8rem; margin-bottom: 10px; }
+        .insight-card h6 { font-weight: 700; font-size: 0.9rem; color: #0F056B; }
+        .insight-card p  { font-size: 0.83rem; color: #555; margin: 0; }
+
+        /* ── Correlation cards ── */
+        .corr-card {
+            background: white; border-radius: 10px; padding: 18px; text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+        }
+        .corr-val { font-size: 1.8rem; font-weight: 700; }
+        .corr-pos { color: #276749; }
+        .corr-neg { color: #c53030; }
+        .corr-weak { color: #b7770d; }
+        .corr-label { font-size: 0.78rem; color: #666; margin-top: 4px; }
+
+        /* ── Top artist cards ── */
+        .artist-rank {
+            background: white; border-radius: 10px; padding: 14px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            display: flex; align-items: center; gap: 14px;
+        }
+        .rank-badge {
+            width: 36px; height: 36px; min-width: 36px;
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem;
+        }
+        .artist-rank .name  { font-weight: 600; font-size: 0.9rem; color: #0F056B; }
+        .artist-rank .detail { font-size: 0.75rem; color: #888; }
+
+        /* ── Genre pills ── */
+        .genre-pill {
+            display: inline-block;
+            padding: 6px 16px; border-radius: 50px;
+            font-size: 0.8rem; font-weight: 600; margin: 4px;
+            color: white;
+        }
+        .g1 { background: linear-gradient(135deg, #0F056B, #2a1a9e); }
+        .g2 { background: linear-gradient(135deg, #2a1a9e, #4a2fbd); }
+        .g3 { background: linear-gradient(135deg, #1a8a45, #27ae60); }
+        .g4 { background: linear-gradient(135deg, #b35a00, #e07a00); }
+        .g5 { background: linear-gradient(135deg, #7b2d8b, #9b59b6); }
+
+        /* ── CTA Streamlit buttons ── */
+        .btn-streamlit {
+            background: linear-gradient(135deg, #1DB954, #17a347);
+            border: none; color: white; border-radius: 8px;
+            padding: 10px 24px; font-weight: 600; transition: opacity 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-streamlit:hover { opacity: 0.88; color: white; }
+
+        /* ── Video ── */
         .video-container {
-            position: relative;
-            padding-bottom: 40.66%;
-            height: 0;
-            overflow: hidden;
-            max-width: 70%;
-            margin : auto;
-            background: #000;
-            border-radius: 8px;
+            position: relative; padding-bottom: 40%;
+            height: 0; overflow: hidden;
+            max-width: 70%; margin: auto;
+            background: #000; border-radius: 12px;
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* ── Buttons ── */
+        .btn-main {
+            background: linear-gradient(135deg, #0F056B, #2a1a9e);
+            border: none; color: white; border-radius: 8px;
+            padding: 10px 28px; font-weight: 600; transition: opacity 0.2s;
         }
-        .highlight {
-            color: #0F056B;
+        .btn-main:hover { opacity: 0.88; color: white; }
+        .btn-outline-main {
+            border: 2px solid #0F056B; color: #0F056B;
+            border-radius: 8px; padding: 10px 28px;
+            font-weight: 600; background: transparent; transition: all 0.2s;
         }
-        .portfolio-media {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
+        .btn-outline-main:hover { background: #0F056B; color: white; }
     </style>
 </head>
 <body>
-    
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
 <header class="header">
-    <h1><strong>🎶 Spotify Data Explorer</strong></h1>
-    <ul>
-        <li>Ce projet propose une analyse approfondie des artistes, morceaux et genres musicaux, tout en offrant une interface Streamlit intuitive pour une exploration fluide et dynamique.</li>
-        <li>Grâce aux données issues de Spotify et aux techniques avancées d’analyse exploratoire, nous avons développé deux applications interactives permettant de rechercher des artistes et de filtrer les morceaux par année et genre.</li>
-    </ul>
+    <div class="container">
+        <h1>🎵 Spotify Data Explorer</h1>
+        <p>Exploration approfondie de <strong>1,16 million d'artistes</strong> et <strong>586 000 morceaux</strong> Spotify : analyse des tendances musicales, des corrélations audio, et deux applications interactives Streamlit pour explorer les données en temps réel.</p>
+        <div class="mt-3">
+            <span class="badge-tag"><i class="fab fa-python me-1"></i>Python</span>
+            <span class="badge-tag"><i class="fas fa-table me-1"></i>Pandas · NumPy</span>
+            <span class="badge-tag"><i class="fas fa-chart-bar me-1"></i>Matplotlib · Seaborn</span>
+            <span class="badge-tag"><i class="fas fa-rocket me-1"></i>Streamlit</span>
+            <span class="badge-tag"><i class="fab fa-wikipedia-w me-1"></i>Wikipedia API</span>
+        </div>
+    </div>
 </header>
 
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Objectifs du projet</h2>
-            <ul>
-                <li>Analyse exploratoire des données : manipulation et extraction d’insights avec Pandas et NumPy.</li>
-                <li>Visualisation avancée : génération de graphiques clairs et interactifs avec Matplotlib et Seaborn.</li>
-                <li>Développement d’interfaces interactives : création d’une expérience utilisateur fluide et intuitive avec Streamlit.</li>
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h2>Application Streamlit</h2>
-            <img src="assets/images/portfolio/spotify.png" class="img-fluid rounded shadow" alt="App Streamlit Spotify">
-        </div>
-        <div class="col-md-4">
-            <h2>Compétences clés</h2>
-            <ul>
-                <li>Manipulation de données avec Pandas et NumPy.</li>
-                <li>Visualisation avec Matplotlib et Seaborn.</li>
-                <li>Déploiement d'apps web avec Streamlit.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="container my-5">
-    <h2 class="text-center">Les Atouts du Projet</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-4">
-            <h4>🔹 Exploration Intuitive</h4>
-            <p>Deux apps simples pour visualiser les tendances musicales sur Spotify.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>📊 Visualisation Dynamique</h4>
-            <p>Graphiques interactifs pour analyser la popularité et les corrélations.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>🎼 Accès aux Données Clés</h4>
-            <p>Filtrage temps réel pour rechercher artistes et morceaux.</p>
+<!-- ═══════════════════════ STATS BANNER ═══════════════════════ -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">1,16M</span>
+                    <div class="stat-label">Artistes analysés</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">586K</span>
+                    <div class="stat-label">Morceaux · 20 variables audio</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">1 775</span>
+                    <div class="stat-label">Chansons uniques Top 200 Global</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <span class="stat-number">2</span>
+                    <div class="stat-label">Applications Streamlit déployées</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ═══════════════════════ DEUX APPS STREAMLIT ═══════════════════════ -->
 <div class="container my-5">
-    <h2 class="text-center">📌 Résultats et Insights</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Ed Sheeran, Ariana Grande et Drake en tête des followers Spotify.</p>
+    <div class="section-title"><i class="fas fa-rocket"></i> Deux applications Streamlit interactives</div>
+    <div class="row g-4">
+
+        <!-- App 1 -->
+        <div class="col-md-6">
+            <div class="app-card">
+                <span class="app-badge">App 1 — Déployée en ligne</span>
+                <div class="app-icon"><i class="fas fa-search"></i></div>
+                <h4>Recherche Artiste & Titre</h4>
+                <ul>
+                    <li>Recherche un artiste par nom → affiche ses <strong>followers</strong>, popularité, chansons les plus populaires, morceaux les plus récents</li>
+                    <li>Nombre de singles dans le <strong>Top 200 Global 2020</strong></li>
+                    <li>Lien Wikipedia automatique via l'API Wikipedia</li>
+                    <li>Recherche d'un titre → résultats triés par popularité (Top 20)</li>
+                </ul>
+                <a href="https://spotifyanalysis-mxgrywhgddsye6uttngfpx.streamlit.app/" target="_blank" class="btn btn-streamlit mt-3">
+                    <i class="fas fa-external-link-alt"></i> Ouvrir l'app
+                </a>
+            </div>
         </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Les genres Pop, Dance Pop et Trap Latino dominent toujours.</p>
+
+        <!-- App 2 -->
+        <div class="col-md-6">
+            <div class="app-card">
+                <span class="app-badge">App 2 — Déployée en ligne</span>
+                <div class="app-icon"><i class="fas fa-filter"></i></div>
+                <h4>Filtrage par Année & Genre</h4>
+                <ul>
+                    <li>Saisir une <strong>année</strong> et un <strong>genre musical</strong> pour filtrer les morceaux correspondants</li>
+                    <li>Fusion des tables artistes × morceaux sur les IDs</li>
+                    <li>Résultats triés par popularité décroissante</li>
+                    <li>Exploration des tendances musicales par période et style</li>
+                </ul>
+                <a href="https://spotifyanalysis-rlcz9qpgu4e5zjmffxxnev.streamlit.app/" target="_blank" class="btn btn-streamlit mt-3">
+                    <i class="fas fa-external-link-alt"></i> Ouvrir l'app
+                </a>
+            </div>
         </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>La majorité des artistes ont moins de 1000 followers.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Les morceaux à forte énergie et volume sont souvent les plus populaires.</p>
+
+    </div>
+</div>
+
+<!-- ═══════════════════════ DONNÉES & STRUCTURE ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-database"></i> Structure des données</div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h6 style="color:#0F056B; font-weight:700;">🎤 Dataset Artistes</h6>
+                    <div style="font-size:1.5rem; font-weight:700; color:#0F056B;">1 162 095</div>
+                    <div style="font-size:0.75rem; color:#888; margin-bottom:12px;">artistes · 5 colonnes</div>
+                    <ul style="font-size:0.83rem; color:#555; padding-left:18px; margin:0;">
+                        <li>Followers : moy. <strong>10 220</strong> / médiane <strong>57</strong></li>
+                        <li>Max followers : <strong>78 900 234</strong></li>
+                        <li>Popularité moy. : <strong>8,8/100</strong></li>
+                        <li>75e percentile : seulement <strong>417</strong> followers</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h6 style="color:#0F056B; font-weight:700;">🎵 Dataset Morceaux</h6>
+                    <div style="font-size:1.5rem; font-weight:700; color:#0F056B;">586 672</div>
+                    <div style="font-size:0.75rem; color:#888; margin-bottom:12px;">morceaux · 20 variables audio</div>
+                    <ul style="font-size:0.83rem; color:#555; padding-left:18px; margin:0;">
+                        <li>Durée moy. : <strong>3 min 50 sec</strong></li>
+                        <li>Tempo moy. : <strong>118,46 BPM</strong></li>
+                        <li>Danceability moy. : <strong>0,56</strong></li>
+                        <li>Contenu explicite : <strong>4%</strong> des morceaux</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h6 style="color:#0F056B; font-weight:700;">🏆 Top 200 Global</h6>
+                    <div style="font-size:1.5rem; font-weight:700; color:#0F056B;">73 200</div>
+                    <div style="font-size:0.75rem; color:#888; margin-bottom:12px;">observations · 366 jours</div>
+                    <ul style="font-size:0.83rem; color:#555; padding-left:18px; margin:0;">
+                        <li>772 artistes uniques</li>
+                        <li>1 775 chansons uniques</li>
+                        <li>Streams moy./jour : <strong>1 300 490</strong></li>
+                        <li>Streams max : <strong>17 223 237</strong>/jour</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container text-center">
-    <h2 class="text-center">🎥 Vidéo de Démonstration</h2>
-    <!-- Intégration YouTube -->
+<!-- ═══════════════════════ TOP ARTISTES ═══════════════════════ -->
+<div class="container my-5">
+    <div class="row g-4">
+        <!-- Par followers -->
+        <div class="col-md-4">
+            <div class="section-title" style="font-size:1.1rem;"><i class="fas fa-users"></i> Top followers</div>
+            <div class="d-flex flex-column gap-2">
+                <div class="artist-rank">
+                    <div class="rank-badge">1</div>
+                    <div><div class="name">Ed Sheeran</div><div class="detail">Meilleur en followers</div></div>
+                </div>
+                <div class="artist-rank">
+                    <div class="rank-badge">2</div>
+                    <div><div class="name">Ariana Grande</div><div class="detail">Top 3 mondial</div></div>
+                </div>
+                <div class="artist-rank">
+                    <div class="rank-badge">3</div>
+                    <div><div class="name">Drake</div><div class="detail">54 416 812 followers</div></div>
+                </div>
+            </div>
+        </div>
+        <!-- Par popularité -->
+        <div class="col-md-4">
+            <div class="section-title" style="font-size:1.1rem;"><i class="fas fa-fire"></i> Top popularité</div>
+            <div class="d-flex flex-column gap-2">
+                <div class="artist-rank">
+                    <div class="rank-badge" style="background:linear-gradient(135deg,#c53030,#e53e3e);">1</div>
+                    <div><div class="name">Justin Bieber</div><div class="detail">#1 score popularité</div></div>
+                </div>
+                <div class="artist-rank">
+                    <div class="rank-badge" style="background:linear-gradient(135deg,#b7770d,#d69e2e);">2</div>
+                    <div><div class="name">Juice WRLD</div><div class="detail">Le + présent Top 200</div></div>
+                </div>
+                <div class="artist-rank">
+                    <div class="rank-badge" style="background:linear-gradient(135deg,#276749,#38a169);">3</div>
+                    <div><div class="name">Billie Eilish</div><div class="detail">2e présence Top 200</div></div>
+                </div>
+            </div>
+        </div>
+        <!-- Chanson #1 -->
+        <div class="col-md-4">
+            <div class="section-title" style="font-size:1.1rem;"><i class="fas fa-star"></i> Meilleure chanson</div>
+            <div class="card p-4 text-center">
+                <div style="font-size:2.5rem;">🎶</div>
+                <div style="font-weight:700; color:#0F056B; font-size:1rem;">Blinding Lights</div>
+                <div style="font-size:0.85rem; color:#666;">The Weeknd</div>
+                <div style="font-size:1.8rem; font-weight:700; color:#0F056B; margin-top:10px;">96</div>
+                <div style="font-size:0.75rem; color:#888;">Score de popularité (/100)</div>
+                <hr class="my-3">
+                <div style="font-size:0.8rem; color:#555;">Drake : 16 chansons dans le Top 200<br>"What's Next" — popularité <strong>91</strong></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ GENRES ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-music"></i> Genres dominants</div>
+        <div class="row align-items-center g-4">
+            <div class="col-md-7">
+                <div class="mb-3">
+                    <span class="genre-pill g1">🎵 Pop</span>
+                    <span class="genre-pill g2">💃 Dance Pop</span>
+                    <span class="genre-pill g3">🌶️ Trap Latino</span>
+                    <span class="genre-pill g4">🎸 Latin Pop</span>
+                    <span class="genre-pill g5">🔊 R&B</span>
+                </div>
+                <ul style="font-size:0.88rem; color:#555;">
+                    <li>Le <strong>Pop</strong> domine largement, suivi par le <strong>Dance Pop</strong> et le <strong>Trap Latino</strong></li>
+                    <li>Confirmation de l'<strong>essor de la musique hispanophone</strong> sur les plateformes de streaming</li>
+                    <li><strong>Bad Bunny</strong> et <strong>Dua Lipa</strong> confirment la domination du Latin Pop</li>
+                    <li>La production musicale connait une forte croissance depuis les années 1950, avec un creux notable pendant la période Covid</li>
+                </ul>
+            </div>
+            <div class="col-md-5">
+                <div class="finding-box">
+                    <strong style="color:#0F056B; font-size:0.9rem;"><i class="fas fa-exclamation-circle me-2"></i>Marché très concentré</strong>
+                    <p style="font-size:0.84rem; margin-top:8px; margin-bottom:0;">La popularité est <strong>extrêmement inégale</strong> : la médiane des followers est de seulement <strong>57</strong>, contre une moyenne de 10 220. Seul 25% des artistes dépassent 417 followers. Un petit groupe de superstars domine l'ensemble du marché.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ CORRÉLATIONS ═══════════════════════ -->
+<div class="container my-5">
+    <div class="section-title"><i class="fas fa-project-diagram"></i> Corrélations clés</div>
+    <div class="row g-3">
+        <div class="col-6 col-md-3">
+            <div class="corr-card">
+                <div class="corr-val corr-pos">+0,59</div>
+                <div class="corr-label">Année sortie → Popularité<br><em>Les sons récents performent mieux</em></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="corr-card">
+                <div class="corr-val corr-neg">−0,75</div>
+                <div class="corr-label">Rang Top 200 → Streams<br><em>Plus de streams = meilleur classement</em></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="corr-card">
+                <div class="corr-val corr-pos">+0,76</div>
+                <div class="corr-label">Loudness → Energy<br><em>Sons forts = sons énergiques</em></div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="corr-card">
+                <div class="corr-val corr-weak">+0,17</div>
+                <div class="corr-label">Followers → Popularité<br><em>Avoir des abonnés ≠ être populaire</em></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ INSIGHTS ═══════════════════════ -->
+<div style="background: white;" class="py-5">
+    <div class="container">
+        <div class="section-title"><i class="fas fa-lightbulb"></i> Insights clés</div>
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="insight-card">
+                    <div class="icon">🏆</div>
+                    <h6>Followers ≠ Popularité</h6>
+                    <p>Ed Sheeran a le plus de followers mais Justin Bieber domine le classement de popularité. Corrélation de seulement 0,17.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="insight-card">
+                    <div class="icon">📈</div>
+                    <h6>Récence = performance</h6>
+                    <p>Les morceaux récents sont systématiquement plus populaires (corrélation +0,59). La fraîcheur prime sur Spotify.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="insight-card">
+                    <div class="icon">🔊</div>
+                    <h6>Énergie & volume</h6>
+                    <p>Corrélation +0,76 entre loudness et energy. Les morceaux à fort volume et énergie élevée dominent les classements.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="insight-card">
+                    <div class="icon">🌎</div>
+                    <h6>Essor hispanique</h6>
+                    <p>Trap Latino et Latin Pop figurent parmi les genres les plus populaires, confirmant la montée en puissance de la musique hispanique.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════ VIDÉO ═══════════════════════ -->
+<div class="container my-5">
+    <h2 class="text-center mb-4" style="color:#0F056B; font-weight:700;"><i class="fas fa-play-circle me-2"></i>Vidéo de Démonstration</h2>
     <div class="video-container">
-        <iframe 
+        <iframe
           src="https://www.youtube-nocookie.com/embed/JLvSbN8MOj4?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
-          title="YouTube video player"
+          title="Spotify Data Explorer — Démonstration"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
     </div>
-
-    <p class="text-center mt-3">
-        Voir le projet sur 
-        <a href="https://github.com/Saikou-BAH/spotify_analysis" target="_blank">GitHub</a>
-    </p>
-    <p class="text-center mt-3">
-        Accéder à l'app Streamlit n°1 :
-        <a href="https://spotifyanalysis-mxgrywhgddsye6uttngfpx.streamlit.app/" target="_blank">Streamlit</a>
-    </p>
-    <p class="text-center mt-3">
-        Accéder à l'app Streamlit n°2 :
-        <a href="https://spotifyanalysis-rlcz9qpgu4e5zjmffxxnev.streamlit.app/" target="_blank">Streamlit</a>
-    </p>
-    <p class="text-center mt-2">
+    <p class="text-center mt-3" style="font-size:0.9rem;">
         Problème de lecture ?
-        <a href="https://youtu.be/JLvSbN8MOj4" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
+        <a href="https://youtu.be/JLvSbN8MOj4" target="_blank" rel="noopener" style="color:#0F056B; font-weight:600;">Ouvrir sur YouTube</a>
     </p>
 </div>
 
-<div class="text-center my-5">
-    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<div class="container my-5 text-center">
+    <a href="https://github.com/Saikou-BAH/spotify_analysis" target="_blank" class="btn btn-main me-2 mb-2">
+        <i class="fab fa-github me-2"></i>Voir sur GitHub
+    </a>
+    <a href="https://spotifyanalysis-mxgrywhgddsye6uttngfpx.streamlit.app/" target="_blank" class="btn btn-streamlit me-2 mb-2">
+        <i class="fas fa-rocket me-2"></i>App 1 — Artiste & Titre
+    </a>
+    <a href="https://spotifyanalysis-rlcz9qpgu4e5zjmffxxnev.streamlit.app/" target="_blank" class="btn btn-streamlit me-2 mb-2">
+        <i class="fas fa-filter me-2"></i>App 2 — Année & Genre
+    </a>
+    <br class="mt-2">
+    <a href="index.html" class="btn btn-outline-main mt-2">
+        <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+    </a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

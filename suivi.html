@@ -3,160 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suivi des ventes - Power BI</title>
+    <title>Suivi des Ventes - Power BI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #F4F2FF;
             color: #333;
+            font-family: 'Poppins', sans-serif;
         }
+
+        /* ── HEADER ── */
         .header {
-            background-color: #0F056B;
+            background: linear-gradient(135deg, #0F056B 0%, #2d1b8e 60%, #4a2fa8 100%);
             color: white;
-            padding: 40px 0;
+            padding: 60px 20px 50px;
             text-align: center;
         }
-        .btn-custom {
-            background-color: #0F056B;
-            border-color: #0F056B;
-            font-size: 18px;
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .header p.subtitle {
+            font-size: 1.05rem;
+            opacity: 0.88;
+            max-width: 750px;
+            margin: 0 auto 25px;
+            line-height: 1.7;
+        }
+        .tech-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin: 4px;
+        }
+
+        /* ── STATS BANNER ── */
+        .stats-banner {
+            background: #0F056B;
+            color: white;
+            padding: 28px 0;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 10px 20px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #a78bfa;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            opacity: 0.82;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        /* ── SECTIONS ── */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0F056B;
+            margin-bottom: 8px;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #0F056B, #7c3aed);
+            margin-top: 8px;
+            border-radius: 2px;
+        }
+        .section-title.text-center::after {
+            margin: 8px auto 0;
+        }
+
+        /* ── PIPELINE STEPS ── */
+        .pipeline-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px 20px;
+            width: 170px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-top: 4px solid #0F056B;
+            transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-4px); }
+        .step-number {
+            width: 36px; height: 36px;
+            background: #0F056B;
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 10px;
+        }
+        .step-card h6 {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #0F056B;
+            margin-bottom: 6px;
+        }
+        .step-card p {
+            font-size: 0.75rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* ── FEATURE CARDS ── */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 28px 24px;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.08);
+            height: 100%;
+            border-left: 4px solid #0F056B;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(15,5,107,0.15);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        .feature-card h5 {
+            font-weight: 600;
+            color: #0F056B;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        .feature-card p, .feature-card ul {
+            font-size: 0.88rem;
+            color: #555;
+            margin: 0;
+        }
+        .feature-card ul { padding-left: 18px; }
+        .feature-card li { margin-bottom: 4px; }
+
+        /* ── KPI CARDS ── */
+        .kpi-card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px 20px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(15,5,107,0.10);
+            border-top: 4px solid #0F056B;
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0F056B;
+            line-height: 1.1;
+        }
+        .kpi-label {
+            font-size: 0.82rem;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        /* ── FINDING BOXES ── */
+        .finding-box {
+            background: white;
+            border-left: 5px solid #0F056B;
             border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(15,5,107,0.07);
         }
-        .btn-custom:hover {
-            background-color: #0F056B;
+        .finding-box.warning {
+            border-left-color: #f59e0b;
         }
-        .card {
-            border: none;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        .finding-box .finding-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #0F056B;
+            margin-bottom: 6px;
         }
-        .portfolio-media {
-            max-width: 100%;
-            height: auto;
+        .finding-box.warning .finding-label { color: #d97706; }
+        .finding-box p { margin: 0; font-size: 0.92rem; color: #444; }
+
+        /* ── SCREENSHOT ── */
+        .screenshot-card {
+            background: white;
+            border-radius: 14px;
+            padding: 12px;
+            box-shadow: 0 6px 24px rgba(15,5,107,0.12);
+        }
+        .screenshot-card img {
             border-radius: 8px;
+            width: 100%;
         }
+
+        /* ── VIDEO ── */
         .video-container {
             position: relative;
             padding-bottom: 40.66%;
             height: 0;
             overflow: hidden;
-            max-width: 70%;
+            max-width: 75%;
             margin: auto;
             background: #000;
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
         }
         .video-container iframe {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* ── BUTTONS ── */
+        .btn-primary-custom {
+            background: #0F056B;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary-custom:hover {
+            background: #2d1b8e;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-outline-custom {
+            background: transparent;
+            color: #0F056B;
+            border: 2px solid #0F056B;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .btn-outline-custom:hover {
+            background: #0F056B;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .section-bg {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(15,5,107,0.07);
         }
     </style>
 </head>
 <body>
-    
+
+<!-- ── HEADER ── -->
 <header class="header">
-    <h1><strong>📊 Suivi et Analyse des Ventes avec Power BI</strong></h1>
-    <ul>
-        <li>Conception d’un tableau de bord interactif permettant de suivre le chiffre d’affaires, les commandes et les performances régionales.</li>
-        <li>Identification des tendances, des zones les plus rentables et analyse des commandes annulées.</li>
-        <li>Aide à la prise de décision grâce à des visualisations dynamiques et des KPIs clairs.</li>
-    </ul>
+    <h1>Suivi et Analyse des Ventes avec Power BI</h1>
+    <p class="subtitle">
+        Tableau de bord interactif conçu pour suivre le chiffre d'affaires, les commandes
+        et les performances régionales — avec détection des anomalies et aide à la décision.
+    </p>
+    <div>
+        <span class="tech-badge"><i class="fas fa-chart-bar me-1"></i>Power BI</span>
+        <span class="tech-badge"><i class="fas fa-calculator me-1"></i>DAX</span>
+        <span class="tech-badge"><i class="fas fa-table me-1"></i>Power Query</span>
+        <span class="tech-badge"><i class="fas fa-map-marker-alt me-1"></i>Analyse Régionale</span>
+        <span class="tech-badge"><i class="fas fa-exclamation-triangle me-1"></i>Détection Anomalies</span>
+    </div>
 </header>
-    
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Objectifs du projet</h2>
-            <ul>
-                <li>Suivre en temps réel les ventes et leur évolution.</li>
-                <li>Analyser la répartition par région, par catégorie et par client.</li>
-                <li>Mesurer l’impact des annulations et identifier les tendances.</li>
-            </ul>
-        </div>
-        <div class="col-md-4">
-            <h2>📸 Aperçu du Dashboard</h2>
-            <img src="assets/images/portfolio/suivi.png" class="img-fluid rounded shadow" alt="Dashboard Suivi des ventes">
-        </div>
-        <div class="col-md-4">
-            <h2>📊 Contenu du Projet</h2>
-            <ul>
-                <li>KPI : chiffre d’affaires, unités vendues, commandes, panier moyen.</li>
-                <li>Tendances mensuelles et progression vers les objectifs.</li>
-                <li>Analyse des régions, catégories de produits et clients.</li>
-                <li>Suivi spécifique des commandes annulées.</li>
-            </ul>
-        </div>
-    </div>
-</div>
-    
-<div class="container my-5">
-    <h2 class="text-center">🚀 Points Forts du Dashboard</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-4">
-            <h4>📈 Visualisation claire</h4>
-            <p>KPIs synthétiques et graphiques dynamiques facilitant l’interprétation rapide.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>🌍 Analyse multi-dimensionnelle</h4>
-            <p>Comparaison par région, produit et période pour un pilotage précis.</p>
-        </div>
-        <div class="col-md-4">
-            <h4>⚠️ Détection des anomalies</h4>
-            <p>Mise en évidence de la hausse des annulations en 2024.</p>
-        </div>
-    </div>
-</div>
-    
-<div class="container my-5">
-    <h2 class="text-center">📌 Résultats et Insights</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>127 M€ de chiffre d’affaires total avec un panier moyen de 986 €.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>La région Sud est la plus performante en termes de revenus.</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">✅</h3>
-            <p>Objectif de CA quasiment atteint (182 M€ sur 195 M€).</p>
-        </div>
-        <div class="col-md-3">
-            <h3 class="text-primary">⚠️</h3>
-            <p>Augmentation importante des commandes annulées en 2024.</p>
+
+<!-- ── STATS BANNER ── -->
+<div class="stats-banner">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">127 M€</div>
+                    <div class="stat-label">Chiffre d'affaires total</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">986 €</div>
+                    <div class="stat-label">Panier moyen</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">93%</div>
+                    <div class="stat-label">Objectif CA atteint</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">KPIs principaux</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- ── APERÇU + OBJECTIFS ── -->
 <div class="container my-5">
-    <h2 class="text-center">🎥 Vidéo de Démonstration</h2>
-    <!-- Intégration YouTube -->
+    <div class="row align-items-center g-5">
+        <div class="col-md-6">
+            <div class="screenshot-card">
+                <img src="assets/images/portfolio/suivi.png" alt="Dashboard Suivi des ventes Power BI">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="section-title">Objectifs du Projet</h2>
+            <p class="text-muted mb-4">Construire un tableau de bord Power BI professionnel pour piloter les ventes d'une organisation, identifier les zones rentables et anticiper les dérives.</p>
+            <div class="finding-box">
+                <div class="finding-label">Besoin métier</div>
+                <p>Disposer d'une vue consolidée du CA, des commandes et des performances par région, produit et période — avec alertes sur les anomalies.</p>
+            </div>
+            <div class="finding-box">
+                <div class="finding-label">Approche</div>
+                <p>Modélisation des données sous Power BI, création de mesures DAX avancées et design d'un dashboard orienté décision.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── PIPELINE ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center">Pipeline de Conception</h2>
+        <div class="pipeline-steps">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h6>Collecte & Nettoyage</h6>
+                <p>Import des données brutes, correction des valeurs manquantes et standardisation via Power Query</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h6>Modélisation</h6>
+                <p>Création du schéma en étoile : tables de faits (commandes) et dimensions (produits, régions, temps)</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h6>Mesures DAX</h6>
+                <p>Calcul du CA, panier moyen, taux de réalisation objectif, glissement mensuel</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h6>Design Dashboard</h6>
+                <p>Mise en page visuelle, choix des graphiques, filtres croisés et slicers interactifs</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">5</div>
+                <h6>Analyse & Insights</h6>
+                <p>Identification des tendances, zones performantes et signaux d'anomalies (annulations 2024)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── KPIs DU DASHBOARD ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">KPIs du Dashboard</h2>
+    <div class="row g-4">
+        <div class="col-6 col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-value">127 M€</div>
+                <div class="kpi-label">Chiffre d'affaires total généré sur la période</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-value">986 €</div>
+                <div class="kpi-label">Panier moyen par commande</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-value">182 M€</div>
+                <div class="kpi-label">CA réalisé sur objectif de 195 M€</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="kpi-card">
+                <div class="kpi-value">Sud</div>
+                <div class="kpi-label">Région la plus performante en revenus</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── FONCTIONNALITÉS ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Fonctionnalités du Dashboard</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h5>Suivi du Chiffre d'Affaires</h5>
+                <ul>
+                    <li>Évolution mensuelle du CA</li>
+                    <li>Progression vers les objectifs annuels</li>
+                    <li>Comparaison année N vs N-1</li>
+                    <li>Courbes de tendance dynamiques</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h5>Analyse Multi-dimensionnelle</h5>
+                <ul>
+                    <li>Performance par région géographique</li>
+                    <li>Répartition par catégorie de produit</li>
+                    <li>Top clients et segments</li>
+                    <li>Filtres croisés et slicers interactifs</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <div class="feature-icon">⚠️</div>
+                <h5>Détection des Anomalies</h5>
+                <ul>
+                    <li>Suivi des commandes annulées</li>
+                    <li>Alerte sur la hausse des annulations 2024</li>
+                    <li>Identification des zones à risque</li>
+                    <li>Indicateurs de performance dégradée</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── INSIGHTS CLÉS ── -->
+<div class="container my-5">
+    <div class="section-bg">
+        <h2 class="section-title text-center mb-4">Insights Clés</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Performance Globale</div>
+                    <p><strong>127 M€</strong> de chiffre d'affaires total avec un panier moyen de <strong>986 €</strong>. L'objectif de CA est atteint à <strong>93%</strong> (182 M€ sur 195 M€ visés).</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Leadership Régional</div>
+                    <p>La <strong>région Sud</strong> se distingue comme la plus performante en termes de revenus, devant les autres régions sur l'ensemble de la période analysée.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box">
+                    <div class="finding-label">Tendances Temporelles</div>
+                    <p>Les données révèlent des <strong>pics saisonniers clairs</strong> avec une progression mensuelle trackée en temps réel, facilitant l'anticipation des cycles de vente.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finding-box warning">
+                    <div class="finding-label">Alerte — Annulations 2024</div>
+                    <p>Augmentation <strong>significative des commandes annulées en 2024</strong>. Ce signal d'anomalie, mis en évidence par le dashboard, nécessite une investigation approfondie pour identifier les causes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── VIDÉO ── -->
+<div class="container my-5">
+    <h2 class="section-title text-center mb-4">Démonstration</h2>
     <div class="video-container">
-        <iframe 
+        <iframe
           src="https://www.youtube-nocookie.com/embed/1Y3zuTTEDSw?rel=0&modestbranding=1&autoplay=0&mute=0&controls=1"
-          title="YouTube video player"
+          title="Suivi des ventes Power BI - Démonstration"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen>
         </iframe>
     </div>
-
-    <p class="text-center mt-3">
-        Explorez le projet en détail sur 
-        <a href="https://github.com/Saikou-BAH/suivi_des_ventes" target="_blank">
-            GitHub
-        </a>.
-    </p>
-    <p class="text-center mt-2">
+    <p class="text-center mt-3 text-muted" style="font-size:0.85rem;">
         Problème de lecture ?
-        <a href="https://youtu.be/1Y3zuTTEDSw" target="_blank" rel="noopener">Ouvrir la vidéo sur YouTube</a>
+        <a href="https://youtu.be/1Y3zuTTEDSw" target="_blank" rel="noopener" style="color:#0F056B;">Ouvrir sur YouTube</a>
     </p>
 </div>
 
-<div class="text-center my-5">
-    <a href="index.html" class="btn btn-custom px-4 py-2 text-white">Retour à la page précédente</a>
+<!-- ── CTA ── -->
+<div class="container my-5">
+    <div style="background: linear-gradient(135deg, #0F056B, #2d1b8e); border-radius: 16px; padding: 50px 40px; text-align: center;">
+        <h3 style="color:white; font-weight:700; margin-bottom:12px;">Explorer le Projet</h3>
+        <p style="color:rgba(255,255,255,0.8); margin-bottom:28px;">Retrouvez le fichier Power BI, les données et la documentation complète sur GitHub.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="https://github.com/Saikou-BAH/suivi_des_ventes" target="_blank" class="btn-primary-custom">
+                <i class="fab fa-github me-2"></i>Voir sur GitHub
+            </a>
+            <a href="index.html" class="btn-outline-custom" style="color:white; border-color:rgba(255,255,255,0.6);">
+                <i class="fas fa-arrow-left me-2"></i>Retour au portfolio
+            </a>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
